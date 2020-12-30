@@ -1,0 +1,9 @@
+{
+    "host":"183.111.199.157",
+    "port":"3306",
+    "user":"alpacao",
+    "password":"alpaca16",
+    "database":"alpacao",
+    "bagapikey": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI5ZTA1OTMyMC0yYzM4LTAxMzktZmFhOS00M2QwOWI1MWQyMTciLCJpc3MiOiJnYW1lbG9ja2VyIiwiaWF0IjoxNjA5MjY5NTM1LCJwdWIiOiJibHVlaG9sZSIsInRpdGxlIjoicHViZyIsImFwcCI6Im1vamppamphbmcifQ.RpIs1hbqKPpl4MyIDtRuU6xCkZ9Vpz7skRTiCSv3TGI",
+    "discordapikey":"NzU4MjEzMTY1Mzg0MjA0Mjg5.X2rrCQ.BvdBFd-8peP0CU3jTBsZOuECQ-8"
+}
