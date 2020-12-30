@@ -41,12 +41,42 @@ channel.send(`어서와! 난 노운이!
 
 client.on("message", async message => {
   if (message.author.bot) return;
-  if (!message.content.startsWith(prefix)) return;
+  if (!message.content.startsWith(prefix) && message.channel.guild.ownerID != message.author.id) return;
   if (message.content.startsWith(`${prefix}`)) {
     const args = message.content.slice(prefix.length).split(/ +/);
-    await search(args[1],message);
+    connection.query(
+      `SELECT * FROM BotChannel where channelid = "${message.channel.id}"`,
+     async function (err, rows) {
+        try {
+          if (err) throw err;
+          if(rows[0] ) await search(args[1],message);
+          else return;
+          
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    );
+    
     return;
   }
+   else if (message.content.startsWith(`!채널추가`)) {
+    connection.query(
+      `insert into BotChannel (servername,channelname,channelid) values ('${message.channel.guild.name}','${message.channel.name}','${message.channel.id}')`
+    );
+    message.channel.send("이 채팅방은 이제 노운이를 사용할 수 있어요.")
+        return;
+   }
+
+   else if (message.content.startsWith(`!채널삭제`)) {
+    connection.query(
+      `delete from BotChannel where channelid = '${message.channel.id}'`
+    );
+    message.channel.send("이 채팅방은 이제 노운이를 사용할 수 없어요.")
+        return;
+   }
+
+
   else {
     message.channel.send("못알아 먹겠는걸");
   }
@@ -54,7 +84,6 @@ client.on("message", async message => {
 
 async function search(id,message){
   const now = new Date();
-  let errmessage = '';
   const insertTime = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
   let findAccountCode,resultSeason,season;
    
@@ -157,14 +186,16 @@ if(season?.data?.data?.attributes?.gameModeStats?.duo) {duo = season.data.data.a
 if(season?.data?.data?.attributes?.gameModeStats?.solo) {solo = season.data.data.attributes.gameModeStats.solo;}
 
 if(rankSolo.currentTier.tier != "NO DATA"){
+  let avgDill = Number(rankSolo.damageDealt)/Number(rankSolo.roundsPlayed);
+      avgDill = String(avgDill).slice(0,5) 
 result.rankSolo = `
-${rankSolo.currentTier.tier} ${rankSolo.currentTier.subTier} ${rankSolo.currentRankPoint}RP
-최대티어: ${rankSolo.bestTier.tier}${rankSolo.bestTier.subTier} ${rankSolo.bestRankPoint}RP
+${rankSolo.currentTier.tier} ${rankSolo.currentTier.subTier} : ${rankSolo.currentRankPoint}RP
+최대티어: ${rankSolo.bestTier.tier}${rankSolo.bestTier.subTier} : ${rankSolo.bestRankPoint}RP
 KDA: ${rankSolo.kda}
 게임 수: ${rankSolo.roundsPlayed} 
 평균 순위: ${rankSolo.avgRank}
 킬/데스/어시: ${rankSolo.kills}/${rankSolo.deaths}/${rankSolo.assists}
-누적 데미지: ${rankSolo.damageDealt}
+평딜: ${avgDill}
 `
 }
 else{
@@ -173,14 +204,16 @@ else{
 
 
 if(rankSquad.currentTier.tier !== "NO DATA"){
+  let avgDill = Number(rankSquad.damageDealt)/Number(rankSquad.roundsPlayed);
+      avgDill = String(avgDill).slice(0,5) 
   result.rankSquad = `
-  ${rankSquad.currentTier.tier} ${rankSquad.currentTier.subTier} ${rankSquad.currentRankPoint}RP
-  최대티어: ${rankSquad.bestTier.tier}${rankSquad.bestTier.subTier} ${rankSquad.bestRankPoint}RP
+  ${rankSquad.currentTier.tier} ${rankSquad.currentTier.subTier} : ${rankSquad.currentRankPoint}RP
+  최대티어: ${rankSquad.bestTier.tier}${rankSquad.bestTier.subTier} : ${rankSquad.bestRankPoint}RP
   KDA: ${rankSquad.kda}
   게임 수: ${rankSquad.roundsPlayed} 
   평균 순위: ${rankSquad.avgRank}
   킬/데스/어시: ${rankSquad.kills}/${rankSquad.deaths}/${rankSquad.assists}
-  누적 데미지: ${rankSquad.damageDealt}
+  평딜: ${avgDill}
   `
   }
   else{
@@ -249,11 +282,27 @@ if(rankSquad.currentTier.tier !== "NO DATA"){
 const resultReply = new Discord.MessageEmbed()
 .setColor("#0ab1ff")
 .setTitle(`${id} 전적 검색 결과에용`)
+.addFields({name:`'                                                  '`,value:
+`
+.
+`,inline:true},
+{
+  name:`'                                                  '`,value:
+  `
+  .
+  `,inline:true
+},
+{
+  name:`'                                                  '`,value:`
+.
+  `,inline:true
+}
+)
 .addFields({name:`랭크 솔로`,value:`
 ${result.rankSolo}`,inline:true},
 {name:`˙`,value:
 `
-·
+'
 `,inline:true},
 {name:`랭크 스쿼드`,value:`
 ${result.rankSquad}`,inline:true})
