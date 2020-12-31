@@ -148,7 +148,6 @@ async function search(id,message,insertTime){
       } 
     }
   )
-  console.log(findAccountCode.data.data[0].id)
   }
   
   catch(e){
