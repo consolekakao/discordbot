@@ -1,12 +1,9 @@
 const { default: axios } = require("axios");
 const Discord = require("discord.js");
 const  mysql = require("mysql");
-const { indexOf } = require("ffmpeg-static");
-const  prefix = "노운아!";
-const ytdl = require("ytdl-core");
+const  prefix = ["노운아!","저장!","도와줘!","내전적!"];
 const config = require("./config.json");
 const client = new Discord.Client();
-const queue = new Map();
 let apikey = config.bagapikey;
 let connection = mysql.createConnection({
   host: config.host,
@@ -31,18 +28,13 @@ client.once("disconnect", () => {
   console.log("Disconnect!");
 });
 
-client.on("guildMemberAdd",member =>{
-const channel = member.guild.channels.cache.find(ch => ch.name === 'member-log');
-if(!channel) return;
-channel.send(`어서와! 난 노운이!
-배그 전적 검색을 하려면 <노운아! 닉네임>을 채팅에 쳐줘!`)
-})
-
-
 client.on("message", async message => {
   if (message.author.bot) return;
-  if (!message.content.startsWith(prefix) && message.channel.guild.ownerID != message.author.id) return;
-  if (message.content.startsWith(`${prefix}`)) {
+  if (!message.content.startsWith("노운아!") && !message.content.startsWith("저장!") && !message.content.startsWith("내전적!") && !message.content.startsWith("도와줘!")&& !message.content.startsWith("!채널추가")&& !message.content.startsWith("!채널삭제")) return;
+  const now = new Date();
+  const insertTime = `${now.getFullYear()}-${Number(now.getMonth())+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
+  
+  if (message.content.startsWith(`노운아!`)) {
     const args = message.content.slice(prefix.length).split(/ +/);
     connection.query(
       `SELECT * FROM BotChannel where channelid = "${message.channel.id}"`,
@@ -60,7 +52,8 @@ client.on("message", async message => {
     
     return;
   }
-   else if (message.content.startsWith(`!채널추가`)) {
+   else if (message.content.startsWith(`!채널추가`) && message.channel.guild.ownerID == message.author.id) {
+     
     connection.query(
       `insert into BotChannel (servername,channelname,channelid) values ('${message.channel.guild.name}','${message.channel.name}','${message.channel.id}')`
     );
@@ -68,7 +61,7 @@ client.on("message", async message => {
         return;
    }
 
-   else if (message.content.startsWith(`!채널삭제`)) {
+   else if (message.content.startsWith(`!채널삭제`) && message.channel.guild.ownerID == message.author.id) {
     connection.query(
       `delete from BotChannel where channelid = '${message.channel.id}'`
     );
@@ -76,15 +69,73 @@ client.on("message", async message => {
         return;
    }
 
+   else if (message.content.startsWith(`저장!`)) {
+    const nickname = message.content.slice(4);
+    connection.query(
+      `SELECT * FROM BotSaveNick where userid = "${message.author.id}"`,
+     async function (err, rows) {
+        try {
+          if (err) throw err;
+          if(rows[0]) { //이미 등록한 아이디가 있는 경우.
+            connection.query(
+              `update BotSaveNick set savename = "${nickname}" where userid = "${message.author.id}"`
+            );
+            message.channel.send(`기존에 있던 아이디를 ${nickname} 으로 변경했어요!`)
 
-  else {
-    message.channel.send("못알아 먹겠는걸");
-  }
-});
+            connection.query(
+              `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
+              ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+              '${insertTime}','${message.content}','OK','')`
+            );
+            return;
+          }
+          else { //아직 등록한 아이디가 없는경우
+            connection.query(
+              `insert into BotSaveNick (userid,savename) values ("${message.author.id}","${nickname}")`
+            );
+            message.channel.send(`아이디를 저장했어요. 이제 내전적! 이라고 외쳐주세요!.`)
+            
+            connection.query(
+              `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
+              ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+              '${insertTime}','${message.content}','OK','')`
+            );
+            return;
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    );
+   }
+   else if (message.content.startsWith(`내전적!`)) {
+     
 
-async function search(id,message){
-  const now = new Date();
-  const insertTime = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
+    connection.query(
+      `SELECT * FROM BotSaveNick where userid = "${message.author.id}"`,
+     async function (err, rows) {
+        try {
+          if (err) throw err;
+          if(rows[0] ) await search(encodeURI(rows[0].savename),message,insertTime);
+          else {
+            message.channel.send(`저장된 아이디가 없어요. 먼저 저장! <아이디> 명령어를 이용해 저장해주세요.`)
+            return;
+          }
+          
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    );
+        return;
+   }
+return;
+
+
+}
+);
+
+async function search(id,message,insertTime){
   let findAccountCode,resultSeason,season;
    
   try{
@@ -97,14 +148,17 @@ async function search(id,message){
       } 
     }
   )
+  console.log(findAccountCode.data.data[0].id)
   }
+  
   catch(e){
   }
   if(!findAccountCode?.data?.data[0]?.id){
     const resultReply = new Discord.MessageEmbed()
     .setColor("#ff0022")
     .setTitle(`${id}의 전적 검색 결과가 없어용.`)
-    .setFooter('PUBG 서버로부터 실시간 제공 받은 자료입니다.',"https://media.discordapp.net/attachments/551980252453142551/793809255547273256/known.jpg")
+    .setThumbnail('https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514')
+    .setFooter('PUBG 서버로부터 실시간 제공 받은 자료입니다.',"https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514")
     message.reply('',resultReply)
    
 connection.query(
@@ -185,44 +239,58 @@ if(season?.data?.data?.attributes?.gameModeStats?.squad) {squad = season.data.da
 if(season?.data?.data?.attributes?.gameModeStats?.duo) {duo = season.data.data.attributes.gameModeStats.duo;}
 if(season?.data?.data?.attributes?.gameModeStats?.solo) {solo = season.data.data.attributes.gameModeStats.solo;}
 
+
 if(rankSolo.currentTier.tier != "NO DATA"){
   let avgDill = Number(rankSolo.damageDealt)/Number(rankSolo.roundsPlayed);
-      avgDill = String(avgDill).slice(0,5) 
+      avgDill = String(avgDill).slice(0,5);
+      rankSolo.kda = String(rankSolo.kda).slice(0,4);
+      rankSolo.avgRank = String(rankSolo.avgRank).slice(0,4)
+      rankSolo.top10Ratio = rankSolo.top10Ratio*100;
+      rankSolo.top10Ratio = String(rankSolo.top10Ratio).slice(0,4) + '%';
+      rankSolo.winRatio = rankSolo.winRatio*100;
+      rankSolo.winRatio = String(rankSolo.winRatio).slice(0,4) + '%';
 result.rankSolo = `
 ${rankSolo.currentTier.tier} ${rankSolo.currentTier.subTier} : ${rankSolo.currentRankPoint}RP
-최대티어: ${rankSolo.bestTier.tier}${rankSolo.bestTier.subTier} : ${rankSolo.bestRankPoint}RP
-KDA: ${rankSolo.kda}
+최고티어: ${rankSolo.bestTier.tier}${rankSolo.bestTier.subTier} : ${rankSolo.bestRankPoint}RP
 게임 수: ${rankSolo.roundsPlayed} 
-평균 순위: ${rankSolo.avgRank}
-킬/데스/어시: ${rankSolo.kills}/${rankSolo.deaths}/${rankSolo.assists}
+KDA: ${rankSolo.kda}
 평딜: ${avgDill}
+평균 순위: ${rankSolo.avgRank}
+탑10: ${rankSolo.top10Ratio}
+승률: ${rankSolo.winRatio}
 `
 }
 else{
   result.rankSolo = `NO DATA`
 }
-
-
 if(rankSquad.currentTier.tier !== "NO DATA"){
   let avgDill = Number(rankSquad.damageDealt)/Number(rankSquad.roundsPlayed);
-      avgDill = String(avgDill).slice(0,5) 
+      avgDill = String(avgDill).slice(0,5);
+      rankSquad.kda = String(rankSquad.kda).slice(0,4);
+      rankSquad.avgRank = String(rankSquad.avgRank).slice(0,4)
+      rankSquad.top10Ratio = rankSquad.top10Ratio*100;
+      rankSquad.top10Ratio = String(rankSquad.top10Ratio).slice(0,4) + '%';
+      rankSquad.winRatio = rankSquad.winRatio*100;
+      rankSquad.winRatio = String(rankSquad.winRatio).slice(0,4) + '%';
+      
   result.rankSquad = `
   ${rankSquad.currentTier.tier} ${rankSquad.currentTier.subTier} : ${rankSquad.currentRankPoint}RP
-  최대티어: ${rankSquad.bestTier.tier}${rankSquad.bestTier.subTier} : ${rankSquad.bestRankPoint}RP
-  KDA: ${rankSquad.kda}
+  최고티어: ${rankSquad.bestTier.tier}${rankSquad.bestTier.subTier} : ${rankSquad.bestRankPoint}RP
   게임 수: ${rankSquad.roundsPlayed} 
-  평균 순위: ${rankSquad.avgRank}
-  킬/데스/어시: ${rankSquad.kills}/${rankSquad.deaths}/${rankSquad.assists}
+  KDA: ${rankSquad.kda}
   평딜: ${avgDill}
+  평균 순위: ${rankSquad.avgRank}
+  탑10: ${rankSquad.top10Ratio}
+  승률: ${rankSquad.winRatio}
   `
   }
   else{
     result.rankSquad = `NO DATA`
   }
-
   if(squad.kills !==''){
-    let kda = Number(squad.kills)/Number(squad.losses);
-    kda = String(kda).slice(0,3) 
+    let kda = (Number(squad.kills)+Number(squad.assists))/Number(squad.losses);
+    kda = Number(String(kda).slice(0,3)) 
+    kda = Number(kda);
     let winGamePercent = Number(squad.wins)/Number(squad.roundsPlayed)*100;
     winGamePercent = String(winGamePercent).slice(0,3) + '%'
     let avgDill = Number(squad.damageDealt)/Number(squad.roundsPlayed);
@@ -232,15 +300,15 @@ if(rankSquad.currentTier.tier !== "NO DATA"){
     if(avgDill == "NaN") avgDill = "-"
     result.squad = `
     KDA: ${kda}
-    승률: ${winGamePercent}
     평딜: ${avgDill}
+    승률: ${winGamePercent}
     `
     }
     else{
       result.squad = `NO DATA`
     }
   if(duo.kills !==''){
-      let kda = Number(duo.kills)/Number(duo.losses);
+      let kda = (Number(duo.kills)+Number(duo.assists))/Number(duo.losses);
       kda = String(kda).slice(0,3) 
       let winGamePercent = Number(duo.wins)/Number(duo.roundsPlayed)*100;
       winGamePercent = String(winGamePercent).slice(0,3) + '%'
@@ -251,8 +319,8 @@ if(rankSquad.currentTier.tier !== "NO DATA"){
       if(avgDill == "NaN") avgDill = "-" 
       result.duo = `
       KDA: ${kda}
-      승률: ${winGamePercent}
       평딜: ${avgDill}
+      승률: ${winGamePercent}
       `
       }
       else{
@@ -260,7 +328,7 @@ if(rankSquad.currentTier.tier !== "NO DATA"){
       }
 
   if(solo.kills !==''){
-        let kda = Number(solo.kills)/Number(solo.losses);
+        let kda = (Number(solo.kills)+Number(solo.assists))/Number(solo.losses);
         kda = String(kda).slice(0,3)
         let winGamePercent = Number(solo.wins)/Number(solo.roundsPlayed)*100;
         winGamePercent = String(winGamePercent).slice(0,3) + '%'
@@ -271,8 +339,8 @@ if(rankSquad.currentTier.tier !== "NO DATA"){
         if(avgDill == "NaN") avgDill = "-"
         result.solo = `
         KDA: ${kda}
-        승률: ${winGamePercent}
         평딜: ${avgDill}
+        승률: ${winGamePercent}
         `
         }
         else{
@@ -282,31 +350,6 @@ if(rankSquad.currentTier.tier !== "NO DATA"){
 const resultReply = new Discord.MessageEmbed()
 .setColor("#0ab1ff")
 .setTitle(`${id} 전적 검색 결과에용`)
-.addFields({name:`'                                                  '`,value:
-`
-.
-`,inline:true},
-{
-  name:`'                                                  '`,value:
-  `
-  .
-  `,inline:true
-},
-{
-  name:`'                                                  '`,value:`
-.
-  `,inline:true
-}
-)
-.addFields({name:`랭크 솔로`,value:`
-${result.rankSolo}`,inline:true},
-{name:`˙`,value:
-`
-'
-`,inline:true},
-{name:`랭크 스쿼드`,value:`
-${result.rankSquad}`,inline:true})
-
 .addFields({name:`솔로`,value:
 `
 ${result.solo}
@@ -321,7 +364,13 @@ ${result.squad}
   `,inline:true
 }
 )
-.setFooter('위 자료는 PUBG로부터 실시간 전송 받은 자료입니다.',"https://media.discordapp.net/attachments/551980252453142551/793809255547273256/known.jpg")
+.addFields({name:`랭크 솔로`,value:`
+${result.rankSolo}`,inline:true},
+{name:`랭크 스쿼드`,value:`
+${result.rankSquad}`,inline:true})
+
+.setThumbnail("https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514")
+.setFooter('위 자료는 PUBG로부터 실시간 전송 받은 자료입니다.',"https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514")
 message.reply('',resultReply)
 connection.query(
   `insert into BotLog (servername,channelname,usernick,time,usecommand,status) values 
@@ -329,8 +378,4 @@ connection.query(
   '${insertTime}','${message.content}','OK')`
 );
 }
-
-
-
- 
 client.login(config.discordapikey);
