@@ -16,16 +16,16 @@ let connection = mysql.createConnection({
 connection.connect();
 
 client.once("ready", () => {
-  console.log("Ready!");
+  console.log("■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□  BOT READY!");
   client.user.setActivity("전적 알려주기 귀찮아");
 });
 
 client.once("reconnecting", () => {
-  console.log("Reconnecting!");
+  console.log("■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□  BOT Reconnecting!");
 });
 
 client.once("disconnect", () => {
-  console.log("Disconnect!");
+  console.log("■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□  BOT Disconnect!");
 });
 
 client.on("message", async message => {
@@ -33,8 +33,9 @@ client.on("message", async message => {
   if (!message.content.startsWith("노운아!") && !message.content.startsWith("저장!") && !message.content.startsWith("내전적!") && !message.content.startsWith("도와줘!")&& !message.content.startsWith("!채널추가")&& !message.content.startsWith("!채널삭제")) return;
   const now = new Date();
   const insertTime = `${now.getFullYear()}-${Number(now.getMonth())+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
-  console.log(`${message.author.id} 서버:${message.channel.guild.name} 채널:${message.channel.name} 채널id:${message.channel.id} 요청: ${message.content} 시간:${insertTime}`);
-  console.log(`#######################################################################################################`);
+  console.log(`user:${message.author.id} server:${message.channel.guild.name} channel:${message.channel.name}`);
+  console.losses(`channelid:${message.channel.id} request: ${message.content} time:${insertTime}`)
+  console.log(`￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣`);
   if (message.content.startsWith(`노운아!`)) {
     const args = message.content.slice(prefix.length).split(/ +/);
     connection.query(
@@ -53,7 +54,7 @@ client.on("message", async message => {
     
     return;
   }
-   else if (message.content.startsWith(`!채널추가`) && message.channel.guild.ownerID == message.author.id) {
+   else if (message.content.startsWith(`!채널추가`) && message.channel.guild.ownerID == message.author.id && message.author.id == `526415286358769664`) {
      
     connection.query(
       `insert into BotChannel (servername,channelname,channelid) values ('${message.channel.guild.name}','${message.channel.name}','${message.channel.id}')`
@@ -62,7 +63,7 @@ client.on("message", async message => {
         return;
    }
 
-   else if (message.content.startsWith(`!채널삭제`) && message.channel.guild.ownerID == message.author.id) {
+   else if (message.content.startsWith(`!채널삭제`) && message.channel.guild.ownerID == message.author.id && message.author.id == `526415286358769664`) {
     connection.query(
       `delete from BotChannel where channelid = '${message.channel.id}'`
     );
