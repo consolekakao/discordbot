@@ -54,7 +54,7 @@ client.on("message", async message => {
     
     return;
   }
-   else if (message.content.startsWith(`!채널추가`) && message.channel.guild.ownerID == message.author.id || message.author.id == `526415286358769664`) {
+   else if (message.content.startsWith(`!채널추가`) && (message.channel.guild.ownerID == message.author.id || message.author.id == `526415286358769664`)) {
      
     connection.query(
       `insert into BotChannel (servername,channelname,channelid) values ('${message.channel.guild.name}','${message.channel.name}','${message.channel.id}')`
@@ -63,7 +63,7 @@ client.on("message", async message => {
         return;
    }
 
-   else if (message.content.startsWith(`!채널삭제`) && message.channel.guild.ownerID == message.author.id || message.author.id == `526415286358769664`) {
+   else if (message.content.startsWith(`!채널삭제`) && (message.channel.guild.ownerID == message.author.id || message.author.id == `526415286358769664`)) {
     connection.query(
       `delete from BotChannel where channelid = '${message.channel.id}'`
     );
