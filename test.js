@@ -165,7 +165,7 @@ async function search(id,message,insertTime){
 connection.query(
   `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
   ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
-  '${insertTime}','${message.content}','-','404_NOT FOUND_USER')`
+  now(),'${message.content}','-','404_NOT FOUND_USER')`
 );
     return;
   }
@@ -375,7 +375,7 @@ message.reply('',resultReply)
 connection.query(
   `insert into BotLog (servername,channelname,usernick,time,usecommand,status) values 
   ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
-  '${insertTime}','${message.content}','OK')`
+  now(),'${message.content}','OK')`
 );
 }
 client.login(config.discordapikey);
