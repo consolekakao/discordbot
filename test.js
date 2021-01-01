@@ -34,7 +34,7 @@ client.on("message", async message => {
   const now = new Date();
   const insertTime = `${now.getFullYear()}-${Number(now.getMonth())+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
   console.log(`user:${message.author.id} server:${message.channel.guild.name} channel:${message.channel.name}`);
-  console.losses(`channelid:${message.channel.id} request: ${message.content} time:${insertTime}`)
+  console.log(`channelid:${message.channel.id} request: ${message.content} time:${insertTime}`)
   console.log(`￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣`);
   if (message.content.startsWith(`노운아!`)) {
     const args = message.content.slice(prefix.length).split(/ +/);
