@@ -33,7 +33,10 @@ client.on("message", async message => {
   if (!message.content.startsWith("노운아!") && !message.content.startsWith("저장!") && !message.content.startsWith("내전적!") && !message.content.startsWith("도와줘!")&& !message.content.startsWith("!채널추가")&& !message.content.startsWith("!채널삭제")) return;
   const now = new Date();
   const insertTime = `${now.getFullYear()}-${Number(now.getMonth())+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
-  
+  console.log(`요청자:${message.author.id} 요청서버:${message.channel.guild.name}`);
+  console.log(`요청채널:${message.channel.name} 요청채널id:${message.channel.id}`);
+  console.log(`요청: ${message.content} 시간:${insertTime}`);
+  console.log(`#######################################################################################################`)
   if (message.content.startsWith(`노운아!`)) {
     const args = message.content.slice(prefix.length).split(/ +/);
     connection.query(
@@ -288,8 +291,7 @@ if(rankSquad.currentTier.tier !== "NO DATA"){
   }
   if(squad.kills !==''){
     let kda = (Number(squad.kills)+Number(squad.assists))/Number(squad.losses);
-    kda = Number(String(kda).slice(0,3)) 
-    kda = Number(kda);
+    kda = (String(kda).slice(0,3)) 
     let winGamePercent = Number(squad.wins)/Number(squad.roundsPlayed)*100;
     winGamePercent = String(winGamePercent).slice(0,3) + '%'
     let avgDill = Number(squad.damageDealt)/Number(squad.roundsPlayed);
