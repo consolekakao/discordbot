@@ -28,6 +28,10 @@ client.once("disconnect", () => {
   console.log("■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□  BOT Disconnect!");
 });
 
+
+
+try{
+
 client.on("message", async message => {
   if (message.author.bot) return;
   if (!message.content.startsWith("노운아!") && !message.content.startsWith("저장!") && !message.content.startsWith("내전적!") && !message.content.startsWith("도와줘!")&& !message.content.startsWith("!채널추가")&& !message.content.startsWith("!채널삭제")) return;
@@ -381,4 +385,16 @@ connection.query(
   now(),'${message.content}','OK')`
 );
 }
+
+
+}
+catch(e){
+  let time = new Date();
+  console.log(`★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★ err ★★★★★★★★★★★★★`);
+  console.log(time);
+}
+
+
+
+
 client.login(config.discordapikey);
