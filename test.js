@@ -147,7 +147,8 @@ async function search(id,message,insertTime){
       headers:{
         'Authorization': `Bearer ${apikey}`,
         'Accept': 'application/vnd.api+json'
-      } 
+      },
+      timeout:2000  
     }
   )
   }
@@ -176,7 +177,8 @@ connection.query(
         headers:{
           'Authorization': `Bearer ${apikey}`,
           'Accept': 'application/vnd.api+json'
-        } 
+        },
+        timeout:2000 
       }
     )
       status = "200";
@@ -189,7 +191,8 @@ connection.query(
       headers:{
         'Authorization': `Bearer ${apikey}`,
         'Accept': 'application/vnd.api+json'
-      } 
+      },
+      timeout:2000  
     }
   )
 let result = {}
