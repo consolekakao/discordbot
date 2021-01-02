@@ -251,7 +251,7 @@ if(rankSolo.currentTier.tier != "NO DATA"){
       rankSolo.winRatio = rankSolo.winRatio*100;
       rankSolo.winRatio = String(rankSolo.winRatio).slice(0,4) + '%';
 result.rankSolo = `
-${rankSolo.currentTier.tier} ${rankSolo.currentTier.subTier} : ${rankSolo.currentRankPoint}RP
+:trophy:${rankSolo.currentTier.tier} ${rankSolo.currentTier.subTier} : ${rankSolo.currentRankPoint}RP
 최고티어: ${rankSolo.bestTier.tier}${rankSolo.bestTier.subTier} : ${rankSolo.bestRankPoint}RP
 게임 수: ${rankSolo.roundsPlayed} 
 KDA: ${rankSolo.kda}
@@ -275,7 +275,7 @@ if(rankSquad.currentTier.tier !== "NO DATA"){
       rankSquad.winRatio = String(rankSquad.winRatio).slice(0,4) + '%';
       
   result.rankSquad = `
-  ${rankSquad.currentTier.tier} ${rankSquad.currentTier.subTier} : ${rankSquad.currentRankPoint}RP
+  :trophy:${rankSquad.currentTier.tier} ${rankSquad.currentTier.subTier} : ${rankSquad.currentRankPoint}RP
   최고티어: ${rankSquad.bestTier.tier}${rankSquad.bestTier.subTier} : ${rankSquad.bestRankPoint}RP
   게임 수: ${rankSquad.roundsPlayed} 
   KDA: ${rankSquad.kda}
