@@ -18,7 +18,7 @@ let connection = mysql.createConnection({
 client.once("ready", () => {
   let now = new Date();
   console.log(`■□■□■□■□■□■□■□  BOT READY! ${now} ■□■□■□■□■□■□■□■□■□ `);
-  client.user.setActivity("전적 알려주기 귀찮아");
+  client.user.setActivity(`${now.getHours}시 ${now.getMonth}에 부활`);
 });
 
 client.once("reconnecting", () => {
