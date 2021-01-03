@@ -13,10 +13,11 @@ let connection = mysql.createConnection({
   database: config.database,
 });
 
-connection.connect();
+
 
 client.once("ready", () => {
-  console.log("■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□  BOT READY!");
+  let now = new Date();
+  console.log(`■□■□■□■□■□■□■□  BOT READY! ${now} ■□■□■□■□■□■□■□■□■□ `);
   client.user.setActivity("전적 알려주기 귀찮아");
 });
 
@@ -28,11 +29,13 @@ client.once("disconnect", () => {
   console.log("■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□  BOT Disconnect!");
 });
 
-
+connection.connect();
 
 try{
 
+
 client.on("message", async message => {
+  
   if (message.author.bot) return;
   if (!message.content.startsWith("노운아!") && !message.content.startsWith("저장!") && !message.content.startsWith("내전적!") && !message.content.startsWith("도와줘!")&& !message.content.startsWith("!채널추가")&& !message.content.startsWith("!채널삭제")) return;
   const now = new Date();
@@ -384,6 +387,7 @@ connection.query(
   ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
   now(),'${message.content}','OK')`
 );
+
 }
 
 
@@ -393,7 +397,6 @@ catch(e){
   console.log(`★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★ err ★★★★★★★★★★★★★`);
   console.log(time);
 }
-
 
 
 
