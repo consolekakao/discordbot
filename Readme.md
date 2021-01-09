@@ -23,9 +23,13 @@ Process
 > 봇인지 체크 함수
 ```
 if (message.author.bot) return;
-  if (!message.content.startsWith("노운아!") && !message.content.startsWith("저장!") && !message.content.startsWith("내전적!") && !message.content.startsWith("도와줘!")&& !message.content.startsWith("!채널추가")&& !message.content.startsWith("!채널삭제")) return;
+  if (!message.content.startsWith("노운아!") && !message.content.startsWith("저장!") && 
+  !message.content.startsWith("내전적!") && !message.content.startsWith("도와줘!")&& 
+  !message.content.startsWith("!채널추가")&& !message.content.startsWith("!채널삭제")) 
+  return;
  
 ```
+공통 구분자인 prifix가 중간에 있어 따로 파일을 안 두고 직접 추가하는 방법을 택함. 
 
 > 전적 검색 함수
 ```
@@ -51,8 +55,10 @@ async function search(id,message,insertTime){
     const resultReply = new Discord.MessageEmbed()
     .setColor("#ff0022")
     .setTitle(`${id}의 전적 검색 결과가 없어용.`)
-    .setThumbnail('https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514')
-    .setFooter('PUBG 서버로부터 실시간 제공 받은 자료입니다.',"https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514")
+    .setThumbnail('https://media.discordapp.net/attachments/793834376017215558/
+    793844780626608148/known2.png?width=541&height=514')
+    .setFooter('PUBG 서버로부터 실시간 제공 받은 자료입니다.',
+    "https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514")
     message.reply('',resultReply)
    
 connection.query(
@@ -64,8 +70,9 @@ connection.query(
   }
     try{
     resultSeason = await axios( //season
-      {
-        url:`https://api.pubg.com/shards/kakao/players/${findAccountCode?.data?.data[0]?.id}/seasons/division.bro.official.pc-2018-10/ranked`,
+      { 
+        url:`https://api.pubg.com/shards/kakao/players/${findAccountCode?.data?.data[0]?.id}/
+        seasons/division.bro.official.pc-2018-10/ranked`,
         headers:{
           'Authorization': `Bearer ${apikey}`,
           'Accept': 'application/vnd.api+json'
@@ -159,4 +166,43 @@ KDA: ${rankSolo.kda}
 else{
   result.rankSolo = `NO DATA`
 }
+```
+> 값이 없으면 해당 객체가 undefined 처리되므로 옵셔널체이닝(?.) 처리. 
+> undefined로 넘어오면 모두 NO DATA 리턴.
+> 랭크게임과 일반게임의 데이터 반환값이 달라 객체를 따로 나눔.
+
+
+
+```
+if (message.content.startsWith(`저장!`)) {
+    const nickname = message.content.slice(4);
+    connection.query(`SELECT * FROM BotSaveNick where userid = "${message.author.id}"`,async function (err, rows) {
+        try {
+            if (err) throw err;
+            if(rows[0]) { //이미 등록한 아이디가 있는 경우.
+            connection.query( `update BotSaveNick set savename = "${nickname}" where userid = "${message.author.id}"`);
+            message.channel.send(`기존에 있던 아이디를 ${nickname} 으로 변경했어요!`)
+            connection.query(
+              `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
+              ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+              '${insertTime}','${message.content}','OK','')`
+            );
+            return;
+          }
+          else { //아직 등록한 아이디가 없는경우
+            connection.query(`insert into BotSaveNick (userid,savename) values ("${message.author.id}","${nickname}")`);
+            message.channel.send(`아이디를 저장했어요. 이제 내전적! 이라고 외쳐주세요!.`)
+            connection.query(
+              `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
+              ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+              '${insertTime}','${message.content}','OK','')`
+            );
+            return;
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    );
+   }
 ```

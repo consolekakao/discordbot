@@ -13,8 +13,6 @@ let connection = mysql.createConnection({
   database: config.database,
 });
 
-
-
 client.once("ready", () => {
   let now = new Date();
   console.log(`■□■□■□■□■□■□■□  BOT READY! ${now} ■□■□■□■□■□■□■□■□■□ `);
@@ -32,10 +30,7 @@ client.once("disconnect", () => {
 connection.connect();
 
 try{
-
-
 client.on("message", async message => {
-  
   if (message.author.bot) return;
   if (!message.content.startsWith("노운아!") && !message.content.startsWith("저장!") && !message.content.startsWith("내전적!") && !message.content.startsWith("도와줘!")&& !message.content.startsWith("!채널추가")&& !message.content.startsWith("!채널삭제")) return;
   const now = new Date();
@@ -119,7 +114,6 @@ client.on("message", async message => {
    }
    else if (message.content.startsWith(`내전적!`)) {
      
-
     connection.query(
       `SELECT * FROM BotSaveNick where userid = "${message.author.id}"`,
      async function (err, rows) {
@@ -130,17 +124,14 @@ client.on("message", async message => {
             message.channel.send(`저장된 아이디가 없어요. 먼저 저장! <아이디> 명령어를 이용해 저장해주세요.`)
             return;
           }
-          
         } catch (error) {
           console.error(error);
         }
       }
     );
-        return;
+      return;
    }
 return;
-
-
 }
 );
 
@@ -338,7 +329,7 @@ if(rankSquad.currentTier.tier !== "NO DATA"){
       }
 
   if(solo.kills !==''){
-        let kda = (Number(solo.kills)+Number(solo.assists))/Number(solo.losses);
+        let kda = (Number(solo.kills))/Number(solo.losses);
         kda = String(kda).slice(0,3)
         let winGamePercent = Number(solo.wins)/Number(solo.roundsPlayed)*100;
         winGamePercent = String(winGamePercent).slice(0,3) + '%'
