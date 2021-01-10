@@ -152,23 +152,22 @@ client.on("message", async message => {
    else if(message.content == `도와줘!` || message.content == `help!`){
     const notCommand = new Discord.MessageEmbed()
     .setColor("#ff0022")
-    .setTitle(`노운이 명령어에요.`)
-    .setDescription('#관리자 명령어')
     if(message.channel.guild.ownerID == message.author.id ){
       notCommand.addFields(
-        
-       { name: `!채널추가`, value: `이제 이 채팅방에서 노운이를 사용할 수 있어요.` },
-       { name: `!채널삭제`, value: `이제 이 채팅방에서 노운이를 사용할 수 없어요.` }
+        {name: `# 관리자 명령어`,value:`\u200b`},
+       { name: `\`!채널추가\``, value: `이제 이 채팅방에서 노운이를 사용할 수 있어요.` },
+       { name: `\`!채널삭제\``, value: `이제 이 채팅방에서 노운이를 사용할 수 없어요.` }
         )
     }
-    notCommand.setDescription('#관리자 명령어')
+   notCommand.addField('\u200b', '\u200b')
     notCommand.addFields(
-      { name: `노운아! <플레이어네임>`, value: `해당 ID의 전적을 불러와요.` },
-      { name: `저장! <플레이어네임>`, value: `해당 ID를 노운이에게 저장해요.` },
-      { name: `내전적!`, value: `저장된 ID의 검색 결과를 불러와요.` },
-      { name: `핵쟁이조회! <플레이어네임>`, value: `노운이가 소속되어있는 서버의 제보로 핵쟁이를 검색해요.\n 풀네임을 입력하지 않아도 괜찮아요.` },
-      { name: `핵쟁이추가! <플레이어네임>`, value: `상대방의 핵이 의심된다면 추가해주세요.\n 신고 누적 3회이상이면 핵쟁이로 등록!` },
-      { name: `도와줘! or help!`, value: `노운이 명령어를 확인할 수 있어요.` }
+      { name: `# 사용자 명령어`,value:`\u200b`},
+      { name: `\`노운아! <Player>\``, value: `해당 ID의 전적을 불러와요.` },
+      { name: `\`저장! <Player>\``, value: `해당 ID를 노운이에게 저장해요.`},
+      { name: `\`내전적!\``, value: `저장된 ID의 검색 결과를 불러와요.` },
+      { name: `\`핵쟁이조회! <Player>\``, value: `노운이가 소속되어있는 서버의 제보로 핵쟁이를 검색해요.\n 풀네임을 입력하지 않아도 괜찮아요.` },
+      { name: `\`핵쟁이추가! <Player>\``, value: `상대방의 핵이 의심된다면 추가해주세요.\n 신고 누적 3회 이상이면 핵쟁이로 등록!` },
+      { name: `\`도와줘!\` or \`help!\``, value: `노운이 명령어를 확인할 수 있어요.` }
     )
     .setThumbnail('https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514')
     
@@ -194,27 +193,33 @@ client.on("message", async message => {
    else if(message.content.startsWith(`핵쟁이조회!`)){
     
      let msg = message.content.slice(7);
-     if(msg.length <3){message.channel.send(`검색 문자가 너무 짧습니다. 3글자 이상 입력해 주세요`); return;}
+     if(msg.length <5){message.channel.send(`검색 문자가 너무 짧습니다. 5글자 이상 입력해 주세요`); return;}
    connection.query(
     `SELECT * FROM BotChannel where channelid = "${message.channel.id}"`,
    async function (err, rows) {
       try {
         if (err) throw err;
         if(rows[0] ) { //사용가능 채널일때
-        await  connection.query(
-            `SELECT count(*) as cnt FROM BotHack where nick LIKE "${msg}%" limit 100`,
+        await connection.query(
+            `SELECT count(*) as cnt,nick FROM BotHack where nick LIKE "${msg}%" group by nick`,
            async function (err, rowsss) {
               try {
                 if (err) throw err;
-               if(rowsss[0].cnt !== 0 && rowsss[0].cnt >=3) { 
-                  message.channel.send(`${rowsss.length}건 검색되네요. 검색 결과는 개인 DM을 확인해주세요.`)
-                  let data = [];
+                let guess = 0;
+                let hack = 0;
+               if(rowsss.length > 0) { 
+                  for(let i=0;i<rowsss.length;i++){
+                    rowsss[i].cnt >= 3 ? hack++ : guess++; 
+                  }
+                  message.channel.send(`의심${guess}건 확신${hack}건 검색되네요. \n검색 결과는 개인 DM을 확인해주세요.`)
+                  let guessdata = [];
+                  let hackdata = [];
                 await connection.query(
                     `select count(*) as cnt,nick from BotHack where nick LIKE "${msg}%"  group by nick limit 100`,async function(err,result){
                       try{
                         if(err) console.log(err)
                       for(let i =0; i<result.length;i++){
-                      await data.push(`${decodeURI(result[i].nick)} [${result[i].cnt}]`)
+                        result[i].cnt >= 3 ? await hackdata.push(`${decodeURI(result[i].nick)} [${result[i].cnt}]`) : await guessdata.push(`${decodeURI(result[i].nick)} [${result[i].cnt}]`)
                         }
                       }
                       catch{
@@ -222,9 +227,11 @@ client.on("message", async message => {
                       }
                     }
                   );
-                 await message.author.send(`검색 결과는 다음과 같아요!`);
-                 await message.author.send(data);
-                  message.channel.send(`위 데이터는 단순 참고용 자료이며 PUBG에서 검증된 자료가 아닙니다.`)
+                 await message.author.send(`검색 결과는 다음과 같아요!\n의심유저 [신고횟수]`);
+                 await message.author.send(guessdata);
+                 await message.author.send(`핵쟁이 [신고횟수]`)
+                 await message.author.send(hackdata)
+                  message.channel.send(`\`위 데이터는 단순 참고용 자료이며 PUBG에서 검증된 자료가 아닙니다.\``)
                 connection.query(
                     `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
                     ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
@@ -234,7 +241,7 @@ client.on("message", async message => {
                 }
 
                 else {
-                  message.channel.send(`깔끔한 아이디네요.`)
+                  message.channel.send(`신고 결과가 없네요.`)
                   connection.query(
                     `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
                     ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
@@ -518,23 +525,23 @@ if(rankSquad.currentTier.tier !== "NO DATA"){
 const resultReply = new Discord.MessageEmbed()
 .setColor("#0ab1ff")
 .setTitle(`${id} 전적 검색 결과에용`)
-.addFields({name:`솔로`,value:
+.addFields({name:`\`솔로\``,value:
 `
 ${result.solo}
 `,inline:true},
 {
-  name:`듀오`,value:`
+  name:`\`듀오\``,value:`
 ${result.duo}`,inline:true
 },
 {
-  name:`스쿼드`,value:`
+  name:`\`스쿼드\``,value:`
 ${result.squad}
   `,inline:true
 }
 )
-.addFields({name:`랭크 솔로`,value:`
+.addFields({name:`\`랭크 솔로\``,value:`
 ${result.rankSolo}`,inline:true},
-{name:`랭크 스쿼드`,value:`
+{name:`\`랭크 스쿼드\``,value:`
 ${result.rankSquad}`,inline:true})
 
 .setThumbnail("https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514")
