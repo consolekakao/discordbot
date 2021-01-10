@@ -156,7 +156,9 @@ client.on("message", async message => {
     .addFields(
       { name: `노운아! <플레이어네임>`, value: `명령어 목록을 불러와요.` },
       { name: `저장! <플레이어네임>`, value: `해당 ID를 노운이에게 저장해요.` },
-      { name: `내전적!`, value: `저장된 ID의 검색 결과를 불러와요.` }
+      { name: `내전적!`, value: `저장된 ID의 검색 결과를 불러와요.` },
+      { name: `핵쟁이조회!`, value: `노운이가 소속되어있는 서버의 제보로 핵쟁이를 검색해요. 풀네임을 입력하지 않아도 괜찮아요.` },
+      { name: `핵쟁이추가!`, value: `상대방의 핵이 의심된다면 핵쟁이추가! <플레이어네임> .` }
     )
     .setThumbnail('https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514')
     
