@@ -32,7 +32,7 @@ connection.connect();
 try{
 client.on("message", async message => {
   if (message.author.bot) return;
-  if (!message.content.startsWith("노운아!") && !message.content.startsWith("저장!") && !message.content.startsWith("내전적!") && !message.content.startsWith("도와줘!")&& !message.content.startsWith("!채널추가")&& !message.content.startsWith("!채널삭제") && !message.content.startsWith("핵쟁이추가!")&& !message.content.startsWith("핵쟁이조회!")) return;
+  if (!message.content.startsWith("노운아!") && !message.content.startsWith("저장!") && !message.content.startsWith("내전적!") && !message.content.startsWith("도와줘!")&& !message.content.startsWith("!채널추가")&& !message.content.startsWith("!채널삭제") && !message.content.startsWith("핵쟁이추가!")&& !message.content.startsWith("핵쟁이조회!") && !message.content.startsWith("help!")) return;
   const now = new Date();
   const insertTime = `${now.getFullYear()}-${Number(now.getMonth())+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
   console.log(`user:${message.author.id} server:${message.channel.guild.name} channel:${message.channel.name}`);
@@ -149,36 +149,29 @@ client.on("message", async message => {
 
     
    }
-   else if(message.content == `도와줘!`){
+   else if(message.content == `도와줘!` || message.content == `help!`){
     const notCommand = new Discord.MessageEmbed()
     .setColor("#ff0022")
     .setTitle(`노운이 명령어에요.`)
-
+    .setDescription('#관리자 명령어')
     if(message.channel.guild.ownerID == message.author.id ){
       notCommand.addFields(
         
-       { name: `!채널추가 (방장전용)`, value: `이 채팅방은 노운이를 사용할 수 있게 만들어요.` },
-       { name: `!채널삭제 (방장전용)`, value: `이제 이 채팅방은 노운이를 사용할 수 없게 만들어요.` }
+       { name: `!채널추가`, value: `이제 이 채팅방에서 노운이를 사용할 수 있어요.` },
+       { name: `!채널삭제`, value: `이제 이 채팅방에서 노운이를 사용할 수 없어요.` }
         )
     }
-
+    notCommand.setDescription('#관리자 명령어')
     notCommand.addFields(
-      { name: `노운아! <플레이어네임>`, value: `해당 유저의 전적을 불러와요.` },
+      { name: `노운아! <플레이어네임>`, value: `해당 ID의 전적을 불러와요.` },
       { name: `저장! <플레이어네임>`, value: `해당 ID를 노운이에게 저장해요.` },
       { name: `내전적!`, value: `저장된 ID의 검색 결과를 불러와요.` },
       { name: `핵쟁이조회! <플레이어네임>`, value: `노운이가 소속되어있는 서버의 제보로 핵쟁이를 검색해요.\n 풀네임을 입력하지 않아도 괜찮아요.` },
-      { name: `핵쟁이추가! <플레이어네임>`, value: `상대방의 핵이 의심된다면 추가해주세요.
-      신고 누적 3회이상이면 핵쟁이로 등록!` }
+      { name: `핵쟁이추가! <플레이어네임>`, value: `상대방의 핵이 의심된다면 추가해주세요.\n 신고 누적 3회이상이면 핵쟁이로 등록!` },
+      { name: `도와줘! or help!`, value: `노운이 명령어를 확인할 수 있어요.` }
     )
     .setThumbnail('https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514')
     
-    
-   if(message.channel.guild.ownerID == message.author.id ){
-     notCommand.addFields(
-      { name: `!채널추가 (방장전용)`, value: `이 채팅방은 노운이를 사용할 수 있게 만들어요.` },
-      { name: `!채널삭제 (방장전용)`, value: `이제 이 채팅방은 노운이를 사용할 수 없게 만들어요.` }
-       )
-   }
 
    connection.query(
     `SELECT * FROM BotChannel where channelid = "${message.channel.id}"`,
