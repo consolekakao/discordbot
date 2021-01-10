@@ -153,12 +153,22 @@ client.on("message", async message => {
     const notCommand = new Discord.MessageEmbed()
     .setColor("#ff0022")
     .setTitle(`노운이 명령어에요.`)
-    .addFields(
-      { name: `노운아! <플레이어네임>`, value: `명령어 목록을 불러와요.` },
+
+    if(message.channel.guild.ownerID == message.author.id ){
+      notCommand.addFields(
+        
+       { name: `!채널추가 (방장전용)`, value: `이 채팅방은 노운이를 사용할 수 있게 만들어요.` },
+       { name: `!채널삭제 (방장전용)`, value: `이제 이 채팅방은 노운이를 사용할 수 없게 만들어요.` }
+        )
+    }
+
+    notCommand.addFields(
+      { name: `노운아! <플레이어네임>`, value: `해당 유저의 전적을 불러와요.` },
       { name: `저장! <플레이어네임>`, value: `해당 ID를 노운이에게 저장해요.` },
       { name: `내전적!`, value: `저장된 ID의 검색 결과를 불러와요.` },
-      { name: `핵쟁이조회!`, value: `노운이가 소속되어있는 서버의 제보로 핵쟁이를 검색해요. 풀네임을 입력하지 않아도 괜찮아요.` },
-      { name: `핵쟁이추가!`, value: `상대방의 핵이 의심된다면 핵쟁이추가! <플레이어네임> .` }
+      { name: `핵쟁이조회! <플레이어네임>`, value: `노운이가 소속되어있는 서버의 제보로 핵쟁이를 검색해요.\n 풀네임을 입력하지 않아도 괜찮아요.` },
+      { name: `핵쟁이추가! <플레이어네임>`, value: `상대방의 핵이 의심된다면 추가해주세요.
+      신고 누적 3회이상이면 핵쟁이로 등록!` }
     )
     .setThumbnail('https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514')
     
@@ -189,27 +199,49 @@ client.on("message", async message => {
 
 
    else if(message.content.startsWith(`핵쟁이조회!`)){
+    
      let msg = message.content.slice(7);
+     if(msg.length <3){message.channel.send(`검색 문자가 너무 짧습니다. 3글자 이상 입력해 주세요`); return;}
    connection.query(
     `SELECT * FROM BotChannel where channelid = "${message.channel.id}"`,
    async function (err, rows) {
       try {
         if (err) throw err;
         if(rows[0] ) { //사용가능 채널일때
-          connection.query(
-            `SELECT count(*) as cnt FROM BotHack where nick LIKE "${msg}%"`,
+        await  connection.query(
+            `SELECT count(*) as cnt FROM BotHack where nick LIKE "${msg}%" limit 100`,
            async function (err, rowsss) {
               try {
                 if (err) throw err;
-                if(rowsss[0] ) { 
-                  message.channel.send(`${rowsss[0].cnt} 건 검색되네요.`)
-                  connection.query(
+               if(rowsss[0].cnt !== 0 && rowsss[0].cnt >=3) { 
+                  message.channel.send(`${rowsss.length}건 검색되네요. 검색 결과는 개인 DM을 확인해주세요.`)
+                  let data = [];
+                await connection.query(
+                    `select count(*) as cnt,nick from BotHack where nick LIKE "${msg}%"  group by nick limit 100`,async function(err,result){
+                      try{
+                        if(err) console.log(err)
+                      for(let i =0; i<result.length;i++){
+                      await data.push(`${decodeURI(result[i].nick)} [${result[i].cnt}]`)
+                        }
+                      }
+                      catch{
+                        console.log("err",err)
+                      }
+                    }
+                  );
+                 await message.author.send(`검색 결과는 다음과 같아요!`);
+                 await message.author.send(data);
+                  message.channel.send(`위 데이터는 단순 참고용 자료이며 PUBG에서 검증된 자료가 아닙니다.`)
+                connection.query(
                     `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
                     ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
                     '${insertTime}','${message.content}','OK','')`
                   );
+                  return;
                 }
+
                 else {
+                  message.channel.send(`깔끔한 아이디네요.`)
                   connection.query(
                     `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
                     ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
@@ -246,16 +278,12 @@ client.on("message", async message => {
          connection.query(
            `insert into BotHack (nick) value ("${msg}")`
          );    
-         message.channel.send(`${msg}를 리스트에 추가했어요.`)
-
-
+         message.channel.send(`${msg}를 신고했어요. 누적 신고내역이 3건 이상이면 핵쟁이 리스트에 등록됩니다.`)
          connection.query(
           `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
           ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
           '${insertTime}','${message.content}','OK','')`
         );
-
-         
        }
        else {
         connection.query(
