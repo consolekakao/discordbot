@@ -32,7 +32,7 @@ connection.connect();
 try{
 client.on("message", async message => {
   if (message.author.bot) return;
-  //if (!message.content.startsWith("노운아!") && !message.content.startsWith("저장!") && !message.content.startsWith("내전적!") && !message.content.startsWith("도와줘!")&& !message.content.startsWith("!채널추가")&& !message.content.startsWith("!채널삭제")) return;
+  if (!message.content.startsWith("노운아!") && !message.content.startsWith("저장!") && !message.content.startsWith("내전적!") && !message.content.startsWith("도와줘!")&& !message.content.startsWith("!채널추가")&& !message.content.startsWith("!채널삭제")) return;
   const now = new Date();
   const insertTime = `${now.getFullYear()}-${Number(now.getMonth())+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
   console.log(`user:${message.author.id} server:${message.channel.guild.name} channel:${message.channel.name}`);
@@ -131,16 +131,24 @@ client.on("message", async message => {
     );
       return;
    }
-   else{
+   else if(message.content == `도와줘!`){
     const notCommand = new Discord.MessageEmbed()
     .setColor("#ff0022")
-    .setTitle(`잘못된 명령어에요.`)
+    .setTitle(`노운이 명령어에요.`)
     .addFields(
-      { name: '노운아! <플레이어네임>', value: '명령어 목록을 불러옵니다.' },
-      { name: '저장! <플레이어네임>', value: '해당 ID를 노운이에게 저장합니다.' },
-      { name: '내전적!', value: '저장된 ID의 검색 결과를 불러옵니다.' }
+      { name: `노운아! <플레이어네임>`, value: `명령어 목록을 불러와요.` },
+      { name: `저장! <플레이어네임>`, value: `해당 ID를 노운이에게 저장해요.` },
+      { name: `내전적!`, value: `저장된 ID의 검색 결과를 불러와요.` }
     )
     .setThumbnail('https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514')
+    
+    
+   if(message.channel.guild.ownerID == message.author.id ){
+     notCommand.addFields(
+      { name: `!채널추가 (방장전용)`, value: `이 채팅방은 노운이를 사용할 수 있게 만들어요.` },
+      { name: `!채널삭제 (방장전용)`, value: `이제 이 채팅방은 노운이를 사용할 수 없게 만들어요.` }
+       )
+   }
     message.reply('',notCommand)
    }
 return;
@@ -334,7 +342,7 @@ if(rankSquad.currentTier.tier !== "NO DATA"){
       KDA: ${kda}
       평딜: ${avgDill}
       승률: ${winGamePercent}
-      `
+      `                       
       }
       else{
         result.duo = `NO DATA`
