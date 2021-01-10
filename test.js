@@ -32,7 +32,7 @@ connection.connect();
 try{
 client.on("message", async message => {
   if (message.author.bot) return;
-  if (!message.content.startsWith("노운아!") && !message.content.startsWith("저장!") && !message.content.startsWith("내전적!") && !message.content.startsWith("도와줘!")&& !message.content.startsWith("!채널추가")&& !message.content.startsWith("!채널삭제")) return;
+  if (!message.content.startsWith("노운아!") && !message.content.startsWith("저장!") && !message.content.startsWith("내전적!") && !message.content.startsWith("도와줘!")&& !message.content.startsWith("!채널추가")&& !message.content.startsWith("!채널삭제") && !message.content.startsWith("핵쟁이추가!")&& !message.content.startsWith("핵쟁이조회!")) return;
   const now = new Date();
   const insertTime = `${now.getFullYear()}-${Number(now.getMonth())+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
   console.log(`user:${message.author.id} server:${message.channel.guild.name} channel:${message.channel.name}`);
@@ -183,10 +183,98 @@ client.on("message", async message => {
     }
   );
     return;
-
-
-    
    }
+
+
+   else if(message.content.startsWith(`핵쟁이조회!`)){
+     let msg = message.content.slice(7);
+   connection.query(
+    `SELECT * FROM BotChannel where channelid = "${message.channel.id}"`,
+   async function (err, rows) {
+      try {
+        if (err) throw err;
+        if(rows[0] ) { //사용가능 채널일때
+          connection.query(
+            `SELECT count(*) as cnt FROM BotHack where nick LIKE "${msg}%"`,
+           async function (err, rowsss) {
+              try {
+                if (err) throw err;
+                if(rowsss[0] ) { 
+                  message.channel.send(`${rowsss[0].cnt} 건 검색되네요.`)
+                  connection.query(
+                    `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
+                    ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+                    '${insertTime}','${message.content}','OK','')`
+                  );
+                }
+                else {
+                  connection.query(
+                    `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
+                    ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+                    '${insertTime}','${message.content}','-','NOT_SELECT')`
+                  );
+                  return;
+                }
+              } catch (error) {
+                console.error(error);
+              }
+            }
+          );    
+        }
+        else {
+          return;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  );
+    return;
+   }
+
+
+   else if(message.content.startsWith(`핵쟁이추가!`)){
+    let msg = message.content.slice(7);
+  connection.query(
+   `SELECT * FROM BotChannel where channelid = "${message.channel.id}"`,
+  async function (err, rows) {
+     try {
+       if (err) throw err;
+       if(rows[0] ) { //사용가능 채널일때
+         connection.query(
+           `insert into BotHack (nick) value ("${msg}")`
+         );    
+         message.channel.send(`${msg}를 리스트에 추가했어요.`)
+
+
+         connection.query(
+          `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
+          ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+          '${insertTime}','${message.content}','OK','')`
+        );
+
+         
+       }
+       else {
+        connection.query(
+          `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
+          ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+          '${insertTime}','${message.content}','-','NOT_ADD_HACK')`
+        );
+         return;
+       }
+     } catch (error) {
+       console.error(error);
+     }
+   }
+ );
+   return;
+  }
+
+
+
+
+
 return;
 }
 );
