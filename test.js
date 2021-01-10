@@ -115,21 +115,39 @@ client.on("message", async message => {
    else if (message.content.startsWith(`내전적!`)) {
      
     connection.query(
-      `SELECT * FROM BotSaveNick where userid = "${message.author.id}"`,
+      `SELECT * FROM BotChannel where channelid = "${message.channel.id}"`,
      async function (err, rows) {
         try {
           if (err) throw err;
-          if(rows[0] ) await search(encodeURI(rows[0].savename),message,insertTime);
-          else {
-            message.channel.send(`저장된 아이디가 없어요. 먼저 저장! <아이디> 명령어를 이용해 저장해주세요.`)
-            return;
+          if(rows[0] ) {
+            connection.query(
+              `SELECT * FROM BotSaveNick where userid = "${message.author.id}"`,
+             async function (err, rows) {
+                try {
+                  if (err) throw err;
+                  if(rows[0] ) await search(encodeURI(rows[0].savename),message,insertTime);
+                  else {
+                    message.channel.send(`저장된 아이디가 없어요. 먼저 저장! <아이디> 명령어를 이용해 저장해주세요.`)
+                    return;
+                  }
+                } catch (error) {
+                  console.error(error);
+                }
+              }
+            );
+              return;
           }
+          else return;
+          
         } catch (error) {
           console.error(error);
         }
       }
     );
-      return;
+
+
+
+    
    }
    else if(message.content == `도와줘!`){
     const notCommand = new Discord.MessageEmbed()
@@ -149,7 +167,25 @@ client.on("message", async message => {
       { name: `!채널삭제 (방장전용)`, value: `이제 이 채팅방은 노운이를 사용할 수 없게 만들어요.` }
        )
    }
-    message.reply('',notCommand)
+
+   connection.query(
+    `SELECT * FROM BotChannel where channelid = "${message.channel.id}"`,
+   async function (err, rows) {
+      try {
+        if (err) throw err;
+        if(rows[0] ) message.reply('',notCommand)
+        else {
+          return;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  );
+    return;
+
+
+    
    }
 return;
 }
