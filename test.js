@@ -152,16 +152,13 @@ client.on("message", async message => {
    else if(message.content == `도와줘!` || message.content == `help!`){
     const notCommand = new Discord.MessageEmbed()
     .setColor("#ff0022")
-    if(message.channel.guild.ownerID == message.author.id ){
+    
       notCommand.addFields(
         {name: `# 관리자 명령어`,value:`\u200b`},
        { name: `\`!채널추가\``, value: `이제 이 채팅방에서 노운이를 사용할 수 있어요.` },
-       { name: `\`!채널삭제\``, value: `이제 이 채팅방에서 노운이를 사용할 수 없어요.` }
-        )
-    }
-   notCommand.addField('\u200b', '\u200b')
-    notCommand.addFields(
-      { name: `# 사용자 명령어`,value:`\u200b`},
+       { name: `\`!채널삭제\``, value: `이제 이 채팅방에서 노운이를 사용할 수 없어요.` },
+       {name:`\u200b`,value:`\u200b`},
+       { name: `# 사용자 명령어`,value:`\u200b`},
       { name: `\`노운아! <Player>\``, value: `해당 ID의 전적을 불러와요.` },
       { name: `\`저장! <Player>\``, value: `해당 ID를 노운이에게 저장해요.`},
       { name: `\`내전적!\``, value: `저장된 ID의 검색 결과를 불러와요.` },
