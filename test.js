@@ -20,11 +20,11 @@ client.once("ready", () => {
 });
 
 client.once("reconnecting", () => {
-  console.log("■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□  BOT Reconnecting!");
+  console.log("■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□  BOT Reconnecting!");
 });
 
 client.once("disconnect", () => {
-  console.log("■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□  BOT Disconnect!");
+  console.log("■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□  BOT Disconnect!");
 });
 
 connection.connect();
@@ -549,6 +549,7 @@ connection.query(
   ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
   now(),'${message.content}','OK')`
 );
+client.user.setActivity(``);
 }
 }
 catch(e){
