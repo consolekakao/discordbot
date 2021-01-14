@@ -188,7 +188,6 @@ client.on("message", async message => {
 
 
    else if(message.content.startsWith(`핵쟁이조회!`)){
-    
      let msg = message.content.slice(7);
      if(msg.length <5){message.channel.send(`검색 문자가 너무 짧습니다. 5글자 이상 입력해 주세요`); return;}
    connection.query(
@@ -223,6 +222,11 @@ client.on("message", async message => {
                         console.log("err",err)
                       }
                     }
+                  );
+                await connection.query(
+                    `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
+                    ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+                    '${insertTime}','${message.content}','OK','')`
                   );
                  await message.author.send(`검색 결과는 다음과 같아요!\n의심유저 [신고횟수]`);
                  await message.author.send(guessdata);
@@ -262,7 +266,6 @@ client.on("message", async message => {
   );
     return;
    }
-
 
    else if(message.content.startsWith(`핵쟁이추가!`)){
     let msg = message.content.slice(7);
