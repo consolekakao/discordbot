@@ -1,7 +1,7 @@
 const { default: axios } = require("axios");
 const Discord = require("discord.js");
 const  mysql = require("mysql");
-const  prefix = ["노운아!","저장!","도와줘!","내전적!"];
+const  prefix = ["노운아!","저장!","도와줘!","내전적!","help!","핵쟁이추가!","핵쟁이조회!"];
 const config = require("./config.json");
 const client = new Discord.Client();
 let apikey = config.bagapikey;
@@ -16,15 +16,15 @@ let connection = mysql.createConnection({
 client.once("ready", () => {
   let now = new Date();
   console.log(`■□■□■□■□■□■□■□  BOT READY! ${now} ■□■□■□■□■□■□■□■□■□ `);
-  client.user.setActivity(`${now.getHours()}시 ${now.getMinutes()}분에 부활`);
+  client.user.setActivity(`${now.getHours()}:${now.getMinutes()}정상 서비스`);
 });
 
 client.once("reconnecting", () => {
-  console.log("■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□  BOT Reconnecting!");
+  console.log("■□■□■□■□■□■□■□■□■□■□■□■□■□■□  BOT Reconnecting!");
 });
 
 client.once("disconnect", () => {
-  console.log("■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□  BOT Disconnect!");
+  console.log("■□■□■□■□■□■□■□■□■□■□■□■□■□■□  BOT Disconnect!");
 });
 
 connection.connect();
@@ -39,7 +39,7 @@ client.on("message", async message => {
   console.log(`channelid:${message.channel.id} request: ${message.content} time:${insertTime}`)
   console.log(`￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣`);
   if (message.content.startsWith(`노운아!`)) {
-    const args = message.content.slice(prefix.length).split(/ +/);
+    const args = message.content.slice(prefix[0].length).split(/ +/);
     connection.query(
       `SELECT * FROM BotChannel where channelid = "${message.channel.id}"`,
      async function (err, rows) {
@@ -164,7 +164,8 @@ client.on("message", async message => {
       { name: `\`내전적!\``, value: `저장된 ID의 검색 결과를 불러와요.` },
       { name: `\`핵쟁이조회! <Player>\``, value: `노운이가 소속되어있는 서버의 제보로 핵쟁이를 검색해요.\n 풀네임을 입력하지 않아도 괜찮아요.` },
       { name: `\`핵쟁이추가! <Player>\``, value: `상대방의 핵이 의심된다면 추가해주세요.\n 신고 누적 3회 이상이면 핵쟁이로 등록!` },
-      { name: `\`도와줘!\` or \`help!\``, value: `노운이 명령어를 확인할 수 있어요.` }
+      { name: `\`도와줘!\` or \`help!\``, value: `노운이 명령어를 확인할 수 있어요.` },
+      { name: `\`개발자에게 문의하기\``, value: `개발자에게 문의를 남길 수 있어요.\nMail: console@kakao.com \nDiscord 노운이친구#9736 \n답변을 원할 경우 메일로 문의주세요.` }
     )
     .setThumbnail('https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514')
     
@@ -338,9 +339,9 @@ async function search(id,message,insertTime){
   catch(e){
   }
   if(!findAccountCode?.data?.data[0]?.id){
-    const resultReply = new Discord.MessageEmbed()
+   const resultReply = new Discord.MessageEmbed()
     .setColor("#ff0022")
-    .setTitle(`${id}의 전적 검색 결과가 없어용.`)
+    .setTitle(`${id}의 전적 검색 결과가 없거나 일시적으로 요청량이 많아요.`)
     .setThumbnail('https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514')
     .setFooter('PUBG 서버로부터 실시간 제공 받은 자료입니다.',"https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514")
     message.reply('',resultReply)
@@ -363,7 +364,6 @@ connection.query(
         timeout:2000 
       }
     )
-      status = "200";
   }
     catch(e){
     }
@@ -567,7 +567,7 @@ client.user.setActivity(``);
 }
 catch(e){
   let time = new Date();
-  console.log(`★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★ err ★★★★★★★★★★★★★`);
+  console.log(`★★★★★★★★★★★ err ★★★★★★★★★★★★★`);
   console.log(time);
 }
 
