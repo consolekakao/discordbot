@@ -174,8 +174,20 @@ client.on("message", async message => {
    async function (err, rows) {
       try {
         if (err) throw err;
-        if(rows[0] ) message.reply('',notCommand)
+        if(rows[0] ){ 
+          message.reply('',notCommand)
+        await connection.query(
+          `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
+          ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+          '${insertTime}','${message.content}','OK','')`
+        );
+      }
         else {
+          await  connection.query(
+            `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
+            ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+            '${insertTime}','${message.content}','-','NO_HELP')`
+          );
           return;
         }
       } catch (error) {
@@ -185,8 +197,6 @@ client.on("message", async message => {
   );
     return;
    }
-
-
    else if(message.content.startsWith(`핵쟁이조회!`)){
      let msg = message.content.slice(7);
      if(msg.length <5){message.channel.send(`검색 문자가 너무 짧습니다. 5글자 이상 입력해 주세요`); return;}
