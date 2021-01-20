@@ -30,11 +30,19 @@ client.once("disconnect", () => {
 connection.connect();
 
 try{
-client.on("message", async message => {
+client.on("message", async message => { 
   if (message.author.bot) return;
-  if (!message.content.startsWith("노운아!") && !message.content.startsWith("저장!") && !message.content.startsWith("내전적!") && !message.content.startsWith("도와줘!")&& !message.content.startsWith("!채널추가")&& !message.content.startsWith("!채널삭제") && !message.content.startsWith("핵쟁이추가!")&& !message.content.startsWith("핵쟁이조회!") && !message.content.startsWith("help!")) return;
-  const now = new Date();
+ const now = new Date();
   const insertTime = `${now.getFullYear()}-${Number(now.getMonth())+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
+  connection.query(
+    `insert into BotChat (server,channel,name,contents,time) values ('${message.channel.guild.name}','${message.channel.name}','${message.author.username}','${message.content}','${insertTime}')`
+  );
+
+
+
+ 
+  if (!message.content.startsWith("노운아!") && !message.content.startsWith("저장!") && !message.content.startsWith("내전적!") && !message.content.startsWith("도와줘!")&& !message.content.startsWith("!채널추가")&& !message.content.startsWith("!채널삭제") && !message.content.startsWith("핵쟁이추가!")&& !message.content.startsWith("핵쟁이조회!") && !message.content.startsWith("help!")) return;
+ 
   console.log(`user:${message.author.id} server:${message.channel.guild.name} channel:${message.channel.name}`);
   console.log(`channelid:${message.channel.id} request: ${message.content} time:${insertTime}`)
   console.log(`￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣`);
@@ -165,7 +173,8 @@ client.on("message", async message => {
       { name: `\`핵쟁이조회! <Player>\``, value: `노운이가 소속되어있는 서버의 제보로 핵쟁이를 검색해요.\n 풀네임을 입력하지 않아도 괜찮아요.` },
       { name: `\`핵쟁이추가! <Player>\``, value: `상대방의 핵이 의심된다면 추가해주세요.\n 신고 누적 3회 이상이면 핵쟁이로 등록!` },
       { name: `\`도와줘!\` or \`help!\``, value: `노운이 명령어를 확인할 수 있어요.` },
-      { name: `\`개발자에게 문의하기\``, value: `개발자에게 문의를 남길 수 있어요.\nMail: console@kakao.com \nDiscord 노운이친구#9736 \n답변을 원할 경우 메일로 문의주세요.` }
+      {name:`\u200b`,value:`\u200b`},
+      { name: `# 개발자에게 문의하기`, value: `개발자에게 문의를 남길 수 있어요.\nMail: console@kakao.com \nDiscord 노운이친구#9736 \n답변을 원할 경우 메일로 문의주세요. \n개인정보 수집,이용 내역은 아래를 확인 해주세요. \nhttp://alpcao.cafe24.com/known.html` }
     )
     .setThumbnail('https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514')
     
