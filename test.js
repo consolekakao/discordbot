@@ -12,7 +12,7 @@ let connection = mysql.createConnection({
   password: config.password,
   database: config.database,
 });
-
+ 
 client.once("ready", () => {
   let now = new Date();
   console.log(`■□■□■□■□■□■□■□  BOT READY! ${now} ■□■□■□■□■□■□■□■□■□ `);
@@ -173,6 +173,7 @@ client.on("message", async message => {
       { name: `\`핵쟁이조회! <Player>\``, value: `노운이가 소속되어있는 서버의 제보로 핵쟁이를 검색해요.\n 풀네임을 입력하지 않아도 괜찮아요.` },
       { name: `\`핵쟁이추가! <Player>\``, value: `상대방의 핵이 의심된다면 추가해주세요.\n 신고 누적 3회 이상이면 핵쟁이로 등록!` },
       { name: `\`도와줘!\` or \`help!\``, value: `노운이 명령어를 확인할 수 있어요.` },
+      { name: `\`!팀배정 <한 팀당 인원수> <멤버1> <멤버2> <멤버3> ...\``, value: `랜덤으로 팀을 꾸려줘요.\nex) !팀배정 3 팀원A 팀원B 팀원C 팀원D` },
       {name:`\u200b`,value:`\u200b`},
       { name: `# 개발자에게 문의하기`, value: `개발자에게 문의를 남길 수 있어요.\nMail: console@kakao.com \nDiscord 노운이친구#9736 \n답변을 원할 경우 메일로 문의주세요.` }
     )
@@ -320,9 +321,11 @@ client.on("message", async message => {
  );
    return;
   }
-
-
-
+//////////////////////////////
+else if(message.content.startsWith("!팀배정")) teamSplit(message);
+  
+  
+  
 
 /////////////////////////////
 
@@ -456,6 +459,77 @@ connection.query(
 
 
 ///////////////////////////
+function teamSplit(message){
+  try{
+
+
+  const args = String(message.content).split(/ +/);
+  if(isNaN(Number(args[1])) || Number(args[1]) == 0)
+  {
+    message.channel.send("사용법이 이상해요. \n!팀배정 <팀별인원수> 멤버A 멤버B 멤버C\nex) !팀배정 3 팀원A 팀원B 팀원C 팀원D")
+    return;
+  }
+  let data = [];
+  for(let i=2;i<args.length;i++)
+  {
+    data[i-2] = args[i]
+  }
+  data = shuffle(data)
+  let result = [];
+  let team = [];
+  let count = Number(args[1]);;
+  while(true)
+  {
+    if(team.length < Number(args[1]))
+    {
+      team.push(data.pop())
+      
+    }
+    else if(team.length == Number(args[1]))
+    {
+      result.push(team);
+      team = [];
+    }
+    
+    
+    if(data.length == 0 || data.length == "0")
+    {
+      result.push(team);
+      team = [];
+      break;
+    }
+    
+
+  }
+
+  let arr = "";
+let re = new Discord.MessageEmbed()
+.setColor("#ff0022")
+.setTitle(`총 ${result.length}팀이 나왔어요.`)
+for(let i = 0; i<result.length;i++)
+{
+arr = "";
+for(let j=0;j<result[i].length;j++)
+{
+  arr += result[i][j] + "\n";
+}
+re.addFields(
+  {name:`${i+1}팀`,value:`${arr}`},
+  {name:`\u200b`,value:`\u200b`}
+)
+}
+message.reply('',re)
+}
+
+
+catch{console.log(err)}
+}
+
+
+
+
+
+
 
 
 
@@ -464,6 +538,8 @@ connection.query(
 return;
 }
 );
+
+function shuffle(a) {  var j, x, i; for (i = a.length; i; i -= 1) { j = Math.floor(Math.random() * i); x = a[i - 1]; a[i - 1] = a[j]; a[j] = x; } return a;}
 
 async function search(id,message,insertTime){
   let findAccountCode,resultSeason,season;
