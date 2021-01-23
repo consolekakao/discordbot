@@ -40,10 +40,6 @@ client.on("message", async message => {
   console.log(`${insertTime}:${message.channel.guild.name}:${message.channel.name}:${message.author.username}:${message.content}`)
 
 
-
- 
-  if (!message.content.startsWith("노운아!") && !message.content.startsWith("저장!") && !message.content.startsWith("내전적!") && !message.content.startsWith("도와줘!")&& !message.content.startsWith("!채널추가")&& !message.content.startsWith("!채널삭제") && !message.content.startsWith("핵쟁이추가!")&& !message.content.startsWith("핵쟁이조회!") && !message.content.startsWith("help!")) return;
- 
   console.log(`user:${message.author.id} server:${message.channel.guild.name} channel:${message.channel.name}`);
   console.log(`channelid:${message.channel.id} request: ${message.content} time:${insertTime}`)
   console.log(`￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣￣`);
@@ -166,6 +162,9 @@ client.on("message", async message => {
         {name: `# 관리자 명령어`,value:`\u200b`},
        { name: `\`!채널추가\``, value: `이제 이 채팅방에서 노운이를 사용할 수 있어요.` },
        { name: `\`!채널삭제\``, value: `이제 이 채팅방에서 노운이를 사용할 수 없어요.` },
+       {name: `\`!커넥트\``, value: `명령어를 사용한 채팅방은 모든 연합 채팅방과 연동됩니다. \n 연합 채널에는 익명으로 자신의 서버명과 랜덤한 아이디만 노출됩니다.`  },
+       {name: `\`!디스커넥트\``, value: `연결된 연합서버들과의 채팅을 모두 끊습니다.`  },
+       {name: `# 패시브 효과`, value: `연합 서버들과의 채팅시 URL이 노출되거나 영입 시도를 하는 행위는 \n봇이 사전 차단 및 관리자에게 보고 합니다.`  },
        {name:`\u200b`,value:`\u200b`},
        { name: `# 사용자 명령어`,value:`\u200b`},
       { name: `\`노운아! <Player>\``, value: `해당 ID의 전적을 불러와요.` },
@@ -175,7 +174,7 @@ client.on("message", async message => {
       { name: `\`핵쟁이추가! <Player>\``, value: `상대방의 핵이 의심된다면 추가해주세요.\n 신고 누적 3회 이상이면 핵쟁이로 등록!` },
       { name: `\`도와줘!\` or \`help!\``, value: `노운이 명령어를 확인할 수 있어요.` },
       {name:`\u200b`,value:`\u200b`},
-      { name: `# 개발자에게 문의하기`, value: `개발자에게 문의를 남길 수 있어요.\nMail: console@kakao.com \nDiscord 노운이친구#9736 \n답변을 원할 경우 메일로 문의주세요. \n개인정보 수집,이용 내역은 아래를 확인 해주세요. \nhttp://alpcao.cafe24.com/known.html` }
+      { name: `# 개발자에게 문의하기`, value: `개발자에게 문의를 남길 수 있어요.\nMail: console@kakao.com \nDiscord 노운이친구#9736 \n답변을 원할 경우 메일로 문의주세요.` }
     )
     .setThumbnail('https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514')
     
@@ -321,6 +320,142 @@ client.on("message", async message => {
  );
    return;
   }
+
+
+
+
+/////////////////////////////
+
+else if(message.content.startsWith(`!커넥트`) && (message.channel.guild.ownerID == message.author.id))
+{
+    connection.query(
+        `insert into connectbotlist (servername,channelname,serverid,channelid) values ('${message.channel.guild.name}','${message.channel.name}','${message.guild.id}','${message.channel.id}')`
+      );
+      message.channel.send("연합채널들과 연결되었어요!")
+      return;
+}
+
+
+else if(message.content.startsWith(`!디스커넥트`) && (message.channel.guild.ownerID == message.author.id))
+{
+    connection.query(
+        `delete from connectbotlist where serverid = '${message.guild.id}' and channelid = '${message.channel.id}'`
+      );
+      message.channel.send("연합채널들과 연결이 중단되었어요!")
+      return;
+}
+
+
+connection.query(
+  `SELECT * FROM connectbotlist where serverid = "${message.guild.id}" and channelid = "${message.channel.id}"`,
+ async function (err, rows) {
+      if (err) throw err;
+      if(rows[0] !== undefined ) saveNickCheck(); 
+  })
+
+  function saveNickCheck(){
+    connection.query(
+      `SELECT savename FROM BotSaveNick where userid = "${message.author.id}"`,
+     async function (err, rows) {
+          if (err) throw err;
+          if(rows[0] !== undefined ) sendMessage(decodeURI(rows[0].savename)); 
+          else{message.channel.send("`저장! <아이디>`로 아이디를 먼저 등록해주세요."); return;}
+      })
+  }
+
+  function sendMessage(nick){
+    if(message.content.startsWith("!help") || message.content.startsWith("!커넥트") || message.content.startsWith("!디스커넥트")) 
+    {
+        let now = new Date();
+        client.guilds.cache.get('551980252453142549').channels.cache.get('802281466952024114').send(`[명령어입력]\n일시: ${now.getMonth()+1}월 ${now.getDate()}일${now.getHours()}시 ${now.getMinutes()}분 \n의심서버: ${message.guild.name} \n의심 유저:${message.author.username} \n메시지내용:${message.content}\n처리결과:미전송`)
+        
+        return;
+    }
+
+
+
+  else if(message.content.includes("//") || message.content.includes("http") || message.content.includes("www.") || message.content.includes(".com")) 
+  {
+      let now = new Date();
+      message.channel.send("`주소 공유가 감지되었어요. \n원만한 클랜 관계를 위해 해당 메시지는 전송하지 않았어요.`")
+      client.guilds.cache.get('551980252453142549').channels.cache.get('802281466952024114').send(`[주소 공유 의심]\n일시: ${now.getMonth()+1}월 ${now.getDate()}일${now.getHours()}시 ${now.getMinutes()}분 \n의심서버: ${message.guild.name} \n의심 유저:${message.author.username} \n메시지내용:${message.content}\n처리결과:미전송`)
+      
+      return;
+  }
+
+  else if(message.content.includes(message.author.discriminator)) 
+  {
+      let now = new Date();
+      message.channel.send("`해시태그가 감지되었어요. \n원만한 클랜 관계를 위해 해당 메시지는 전송하지 않았어요.`")
+      client.guilds.cache.get('551980252453142549').channels.cache.get('802281466952024114').send(`[디스코드 계정 공유 의심]\n일시: ${now.getMonth()+1}월 ${now.getDate()}일${now.getHours()}시 ${now.getMinutes()}분 \n의심서버: ${message.guild.name} \n의심 유저:${message.author.username} \n메시지내용:${message.content}\n처리결과:미전송`)
+      
+      return;
+  }
+
+  else {
+  connection.query(
+      `SELECT * FROM connectbotlist where serverid = "${message.guild.id}" and channelid = "${message.channel.id}"`,
+     async function (err, rows) {
+        try {
+          if (err) throw err;
+          if(rows[0]) {
+             
+             connection.query(
+              `SELECT * FROM connectbotlist where serverid not in ("${message.guild.id}")`,
+              async function (err, rows) {
+                  try {
+                    if (err) throw err;
+                    if(rows) {
+                        let allowServerList = [];
+                        for(let i=0;i<rows.length;i++)
+                        {
+                        let allowData = {};
+                        allowData.servername = decodeURI(rows[i].servername);
+                        allowData.channelname = decodeURI(rows[i].channelname);
+                        allowData.serverid = decodeURI(rows[i].serverid);
+                        allowData.channelid = decodeURI(rows[i].channelid);
+                        allowServerList.push(allowData);
+                        }
+                        let random = Number(message.author.discriminator)+2147483647;
+                        random = String(random).slice(5,9);
+                        message.guild.name.length > 10 ? message.guild.name = message.guild.name.slice(0,10):message.guild.name = message.guild.name.padEnd(10,' ');
+                        for(let i=0;i<rows.length;i++) 
+                        {
+                            
+                            client.guilds.cache.get(allowServerList[i].serverid).channels.cache.get(allowServerList[i].channelid).send(`${message.guild.name}#${nick} => ${message.content}`)
+                        }
+                          
+                       
+
+
+                    }
+                  
+                  }
+                  catch{}
+                  }
+            );
+
+
+
+
+
+          }
+          else return;
+          
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    );
+
+
+
+  }
+  }
+
+
+
+///////////////////////////
 
 
 
