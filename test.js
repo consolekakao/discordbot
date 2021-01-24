@@ -25,8 +25,7 @@ let admin = "526415286358769664";
 client.once("ready", () => {
   let now = new Date();
   console.log(`■□■□■□■□■□■□■□  BOT READY! ${now} ■□■□■□■□■□■□■□■□■□ `);
-  client.user.setActivity(`점검`);
-  //client.user.setActivity(`${now.getHours()}:${now.getMinutes()}정상 서비스`);
+ client.user.setActivity(`${now.getHours()}:${now.getMinutes()}기준 정상 서비스`);
 });
 
 try{
