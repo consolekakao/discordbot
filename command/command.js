@@ -14,7 +14,6 @@ function command(message,insertTime){
         .setColor("#ff0022")
         
           notCommand.addFields(
-<<<<<<< HEAD
             {name: `# 노운이 사용 명령어`,value:`\u200b`},
             { name: `\`!채널추가\``, value: `이제 이 채팅방에서 노운의 모든 기능을 사용할 수 있어요.` },
             { name: `\`!채널삭제\``, value: `이제 이 채팅방에서 노운이를 사용할 수 없어요.` },
