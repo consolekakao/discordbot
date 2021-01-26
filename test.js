@@ -24,7 +24,7 @@ let admin = "526415286358769664";
 
 client.once("ready", () => {
   let now = new Date();
-  console.log(`■□■□■□■  BOT START! ${now.getFullYear()}-${Number(now.getMonth())+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()} ■□■□■□■□ `);
+  console.log(`■□■□■□■  BOT READY! ${now.getFullYear()}-${Number(now.getMonth())+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()} ■□■□■□■□■□■□ `);
  client.user.setActivity(`${now.getHours()}:${now.getMinutes()}기준 정상 서비스`);
 });
 
@@ -53,9 +53,10 @@ client.on("message", async message => {
    else if(message.content.startsWith("팀배정!")) splitTeam(message,insertTime);
    else if(message.content.startsWith(`!커넥트`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) connect(message,insertTime);
    else if(message.content.startsWith(`!디스커넥트`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) disconnect(message,insertTime);
+   else if(message.content.startsWith(`!서버정보`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) message.channel.send(`\`서버ID  ${message.guild.id}\` \n\`채널ID  ${message.channel.id}\``)
    else {
     connection.query(
-      `SELECT * FROM connectbotlist where serverid = "${message.guild.id}" and channelid = "${message.channel.id}"`,
+      `SELECT * FROM BotConnection where requestserverid = "${message.guild.id}" and requestchannelid = "${message.channel.id}"`,
      async function (err, rows) {
           if (err) throw err;
           if(rows[0] !== undefined ) saveNickCheck(); 
@@ -93,14 +94,18 @@ client.on("message", async message => {
     
       else {
       connection.query(
-          `SELECT * FROM connectbotlist where serverid = "${message.guild.id}" and channelid = "${message.channel.id}"`,
+          `SELECT * FROM BotConnection where requestserverid = "${message.guild.id}" and requestchannelid = "${message.channel.id}"`,
          async function (err, rows) {
             try {
               if (err) throw err;
               if(rows[0]) {
                  
                  connection.query(
+<<<<<<< HEAD
                   `SELECT * FROM connectbotlist where serverid not in ("${message.guild.id}") && servername = "${message.guild.name}"`,
+=======
+                  `select * from BotConnection where requestserverid = "${message.guild.id}"`,
+>>>>>>> origin/master
                   async function (err, rows) {
                       try {
                         if (err) throw err;
@@ -109,10 +114,8 @@ client.on("message", async message => {
                                 for(let i=0;i<rows.length;i++)
                                   {
                                   let allowData = {};
-                                  allowData.servername = decodeURI(rows[i].servername);
-                                  allowData.channelname = decodeURI(rows[i].channelname);
-                                  allowData.serverid = decodeURI(rows[i].serverid);
-                                  allowData.channelid = decodeURI(rows[i].channelid);
+                                  allowData.serverid = decodeURI(rows[i].responseserverid);
+                                  allowData.channelid = decodeURI(rows[i].responsechannelid);
                                   allowServerList.push(allowData);
                                   }
                             message.guild.name.length > 10 ? message.guild.name = message.guild.name.slice(0,10):message.guild.name = message.guild.name.padEnd(10,' ');

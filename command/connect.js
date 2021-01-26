@@ -12,11 +12,13 @@ function connect(message,insertTime){
         database: config.database,
       });
         
+      const args = String(message.content).split(/ +/);
+     
         connection.connect()
         connection.query(
-            `insert into connectbotlist (servername,channelname,serverid,channelid) values ('${message.channel.guild.name}','${message.channel.name}','${message.guild.id}','${message.channel.id}')`
+            `insert into BotConnection (requestserver,requestchannel,requestserverid,requestchannelid,responseserverid,responsechannelid) values ('${message.channel.guild.name}','${message.channel.name}','${message.guild.id}','${message.channel.id}','${args[1]}','${args[2]}')`
           );
-          message.channel.send("연합채널들과 연결되었어요!")
+          message.channel.send("해당 채널과 연결되었어요!")
           connection.query(
             `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
             ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',

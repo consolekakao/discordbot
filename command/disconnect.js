@@ -11,12 +11,12 @@ function disconnect(message,insertTime){
         password: config.password,
         database: config.database,
       });
-        
+      const args = String(message.content).split(/ +/);
         connection.connect()
         connection.query(
-            `delete from connectbotlist where serverid = '${message.guild.id}' and channelid = '${message.channel.id}'`
+            `delete from BotConnection where requestserverid = '${message.guild.id}' and requestchannelid = '${message.channel.id}' and responseserverid = '${args[1]}' and responsechannelid = '${args[2]}'`
           );
-          message.channel.send("연합채널들과 연결이 중단되었어요!")
+          message.channel.send("해당 채널과 연결이 중단되었어요!")
           connection.query(
             `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
             ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
