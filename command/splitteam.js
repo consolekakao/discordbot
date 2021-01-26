@@ -14,7 +14,7 @@ function teamSplit(message,insertTime){
   
   
     const args = String(message.content).split(/ +/);
-    if(isNaN(Number(args[1])) || Number(args[1]) == 0)
+    if(isNaN(Number(args[1])) || Number(args[1]) == 0 || Number(args[1].length != 1))
     {
       message.channel.send("사용법이 이상해요. \n팀배정! <팀별인원수> 멤버A 멤버B 멤버C\nex) 팀배정! 3 팀원A 팀원B 팀원C 팀원D")
       connection.query(

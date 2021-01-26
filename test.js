@@ -24,7 +24,7 @@ let admin = "526415286358769664";
 
 client.once("ready", () => {
   let now = new Date();
-  console.log(`■□■□■□■□■□■□■□  BOT READY! ${now} ■□■□■□■□■□■□■□■□■□ `);
+  console.log(`■□■□■□■  BOT START! ${now.getFullYear()}-${Number(now.getMonth())+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()} ■□■□■□■□ `);
  client.user.setActivity(`${now.getHours()}:${now.getMinutes()}기준 정상 서비스`);
 });
 
@@ -100,7 +100,7 @@ client.on("message", async message => {
               if(rows[0]) {
                  
                  connection.query(
-                  `SELECT * FROM connectbotlist where serverid not in ("${message.guild.id}")`,
+                  `SELECT * FROM connectbotlist where serverid not in ("${message.guild.id}") && servername = "${message.guild.name}"`,
                   async function (err, rows) {
                       try {
                         if (err) throw err;
