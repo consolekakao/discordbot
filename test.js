@@ -101,11 +101,8 @@ client.on("message", async message => {
               if(rows[0]) {
                  
                  connection.query(
-<<<<<<< HEAD
-                  `SELECT * FROM connectbotlist where serverid not in ("${message.guild.id}") && servername = "${message.guild.name}"`,
-=======
+
                   `select * from BotConnection where requestserverid = "${message.guild.id}"`,
->>>>>>> origin/master
                   async function (err, rows) {
                       try {
                         if (err) throw err;
