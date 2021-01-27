@@ -9,9 +9,9 @@ async function sendLog(message,number,insertTime){
            await fs.readFileSync('/home/consolekakao/.pm2/logs/bot-error.log','utf-8',function(err,data){
                 message.channel.send(String(data))
             })
-           await message.reply({files:['/home/consolekakao/.pm2/logs/bot-error.log'] });
-           await fs.unlinkSync('/home/consolekakao/.pm2/logs/bot-error.log')
-           await fs.writeFileSync('/home/consolekakao/.pm2/logs/bot-error.log',`${insertTime}`,function(err){if(err === null)console.log("에러로그 정상출력")})
+           //await message.reply({files:['/home/consolekakao/.pm2/logs/bot-error.log'] });
+          // await fs.unlinkSync('/home/consolekakao/.pm2/logs/bot-error.log')
+           //await fs.writeFileSync('/home/consolekakao/.pm2/logs/bot-error.log',`${insertTime}`,function(err){if(err === null)console.log("에러로그 정상출력")})
         }
         if(number == "2")
         {
