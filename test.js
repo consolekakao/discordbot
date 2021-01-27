@@ -55,7 +55,7 @@ client.on("message", async message => {
    else if(message.content.startsWith(`!커넥트`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) connect(message,insertTime);
    else if(message.content.startsWith(`!디스커넥트`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) disconnect(message,insertTime);
    else if(message.content.startsWith(`!서버정보`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) message.channel.send(`\`서버ID  ${message.guild.id}\` \n\`채널ID  ${message.channel.id}\``)
-   else if(message.content.startsWith(`!로그보기`) && message.author.id == admin) sendLog();
+   else if(message.content.startsWith(`!로그보기`) && message.author.id == admin) sendLog(message);
    else {
     connection.query(
       `SELECT * FROM BotConnection where requestserverid = "${message.guild.id}" and requestchannelid = "${message.channel.id}"`,
