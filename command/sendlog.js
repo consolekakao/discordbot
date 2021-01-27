@@ -6,8 +6,10 @@ async function sendLog(message,number,insertTime){
         let time = date.getMonth()+1
         if(number == "1")
         {
-            await fs.readFileSync('/home/consolekakao/.pm2/logs/bot-error.log','utf-8',function(err,data){message.reply({files:['/home/consolekakao/.pm2/logs/bot-error.log'] });
-        message.channel.send(`\`${String(data).substring(data.length-1000,data.length)}\``)})
+            await fs.readFileSync('/home/consolekakao/.pm2/logs/bot-error.log','utf-8',function(err,data){
+                message.reply({files:['/home/consolekakao/.pm2/logs/bot-error.log'] });
+                if(data.length > 1500) data = String(data).substring(data.length-1500,data.length);
+                message.channel.send(`\`${data}\``)})
            await fs.unlinkSync('/home/consolekakao/.pm2/logs/bot-error.log')
            await fs.writeFileSync('/home/consolekakao/.pm2/logs/bot-error.log',`${insertTime}`,function(err){if(err === null)console.log("에러로그 정상출력")})
         }
