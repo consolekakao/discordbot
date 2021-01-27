@@ -6,11 +6,13 @@ async function sendLog(message,number){
         {
            await message.reply({ files: ['/home/consolekakao/.pm2/logs/bot-error.log'] })
            await fs.unlinkSync('/home/consolekakao/.pm2/logs/bot-error.log')
+           await fs.writeFileSync('/home/consolekakao/.pm2/logs/bot-error.log')
         }
         if(number == "2")
         {
            await message.reply({ files: ['/home/consolekakao/.pm2/logs/bot-out.log']})
            await fs.unlinkSync('/home/consolekakao/.pm2/logs/bot-out.log')
+           await fs.writeFileSync('/home/consolekakao/.pm2/logs/bot-out.log')
         }
    
   }
