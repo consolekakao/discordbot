@@ -12,6 +12,7 @@ const addHack = require("./command/addhack.js");
 const splitTeam = require("./command/splitteam.js");
 const connect = require("./command/connect.js");
 const disconnect = require("./command/disconnect.js");
+const sendLog = require("./command/sendlog.js");
 const client = new Discord.Client();
 let connection = mysql.createConnection({
   host: config.host,
@@ -54,6 +55,7 @@ client.on("message", async message => {
    else if(message.content.startsWith(`!커넥트`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) connect(message,insertTime);
    else if(message.content.startsWith(`!디스커넥트`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) disconnect(message,insertTime);
    else if(message.content.startsWith(`!서버정보`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) message.channel.send(`\`서버ID  ${message.guild.id}\` \n\`채널ID  ${message.channel.id}\``)
+   else if(message.content.startsWith(`!로그보기`) && message.author.id == admin) sendLog();
    else {
     connection.query(
       `SELECT * FROM BotConnection where requestserverid = "${message.guild.id}" and requestchannelid = "${message.channel.id}"`,
@@ -121,7 +123,7 @@ client.on("message", async message => {
                             
                             }
                       }
-                      catch(e){console.log(e)}
+                      catch(e){client.guilds.cache.get("551980252453142549").channels.cache.get("802281466952024114").send(`다음과같은 오류가 있었어요.\`${String(e).substring}\``)}
                       }
                 );
     
@@ -129,7 +131,8 @@ client.on("message", async message => {
               else return;
               
             } catch (error) {
-              console.error(error);
+              //console.error(error);
+              client.guilds.cache.get("551980252453142549").channels.cache.get("802281466952024114").send(`다음과같은 오류가 있었어요.\`${String(e).substring}\``)
             }
           }
         );
@@ -141,12 +144,26 @@ client.on("message", async message => {
   
    }
 
+   
+    
+  
+
+
+
 return;
 }
 );
 
 }
-catch(e){
-  console.log(e);
+catch(errlog){
+  console.log(errlog);
+  client.guilds.cache.get("551980252453142549").channels.cache.get("802281466952024114").send(`다음과같은 오류가 있었어요.\`${String(e).substring}\``)
 }
+
+
+
+
+
 client.login(config.discordapikey);
+
+

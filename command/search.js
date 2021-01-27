@@ -28,7 +28,8 @@ let connection = mysql.createConnection({
     }
     
     catch(e){
-        console.log(e)
+        //console.log(e)
+        client.guilds.cache.get("551980252453142549").channels.cache.get("802281466952024114").send(`다음과같은 오류가 있었어요.\`${String(e).substring}\``)
     }
     if(!findAccountCode?.data?.data[0]?.id){
      const resultReply = new Discord.MessageEmbed()
