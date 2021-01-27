@@ -7,13 +7,13 @@ async function sendLog(message,number,insertTime){
         if(number == "1")
         {
             
-           message.reply({files:['/home/consolekakao/.pm2/logs/bot-error.log'] });
+           await message.reply({files:['/home/consolekakao/.pm2/logs/bot-error.log'] });
            await fs.unlinkSync('/home/consolekakao/.pm2/logs/bot-error.log')
            await fs.writeFileSync('/home/consolekakao/.pm2/logs/bot-error.log',`${insertTime}`,function(err){if(err === null)console.log("에러로그 정상출력")})
         
         if(number == "2")
         {
-           message.reply({ files: ['/home/consolekakao/.pm2/logs/bot-out.log']})
+           await message.reply({ files: ['/home/consolekakao/.pm2/logs/bot-out.log']})
            await fs.unlinkSync('/home/consolekakao/.pm2/logs/bot-out.log')
            await fs.writeFileSync('/home/consolekakao/.pm2/logs/bot-out.log',`${insertTime}`,function(err){if(err === null)console.log("봇로그 정상출력")})
         }
