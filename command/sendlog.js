@@ -6,21 +6,20 @@ async function sendLog(message,number,insertTime){
         let time = date.getMonth()+1
         if(number == "1")
         {
-            await fs.readFileSync('/home/consolekakao/.pm2/logs/bot-error.log','utf-8',function(err,data){
-                message.reply({files:['/home/consolekakao/.pm2/logs/bot-error.log'] });
-                if(data.length > 1500) data = String(data).substring(data.length-1500,data.length);
-                message.channel.send(`\`${data}\``)})
+            
+           message.reply({files:['/home/consolekakao/.pm2/logs/bot-error.log'] });
            await fs.unlinkSync('/home/consolekakao/.pm2/logs/bot-error.log')
-           await fs.writeFileSync('/home/consolekakao/.pm2/logs/bot-error.log',`${insertTime}`,function(err){if(err === null)console.log("에러로그 정상출력")})
-        }
+           await fs.writeFileSync('/home/consolekakao/.pm2/logs/bot-error.log',`${insertTime}`,function(err){if(err === null)console.log("봇로그 정상출력")})
+        
         if(number == "2")
         {
-           await fs.readFileSync('/home/consolekakao/.pm2/logs/bot-out.log','utf-8',function(err,data){message.reply({ files: ['/home/consolekakao/.pm2/logs/bot-out.log']})})
+           message.reply({ files: ['/home/consolekakao/.pm2/logs/bot-out.log']})
            await fs.unlinkSync('/home/consolekakao/.pm2/logs/bot-out.log')
            await fs.writeFileSync('/home/consolekakao/.pm2/logs/bot-out.log',`${insertTime}`,function(err){if(err === null)console.log("에러로그 정상출력")})
         }
    
   }
+}
   catch(e){console.log(e); message.reply(`issue => ,${e}`)}
 
 
