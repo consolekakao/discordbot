@@ -57,7 +57,11 @@ client.on("message", async message => {
    else if(message.content.startsWith(`!서버정보`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) message.channel.send(`\`서버ID  ${message.guild.id}\` \n\`채널ID  ${message.channel.id}\``)
    else if(message.content.startsWith(`!에러로그`) && message.author.id == admin) sendLog(message,1,insertTime);
    else if(message.content.startsWith(`!봇로그`) && message.author.id == admin) sendLog(message,2,insertTime);
-   
+   else if(message.content.startsWith(`!!`)){
+    const list = client.guilds.cache.get(message.guild.id)
+   const members = list.members.cache.map(member => member.id);
+   console.log(members)
+   }
    else {
     connection.query(
       `SELECT * FROM BotConnection where requestserverid = "${message.guild.id}" and requestchannelid = "${message.channel.id}"`,
