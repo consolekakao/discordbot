@@ -27,7 +27,7 @@ const customServer = "551980252453142549";
 client.once("ready", () => {
   let now = new Date();
   console.log(`■□■□■□■  BOT READY! ${now.getFullYear()}-${Number(now.getMonth())+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()} ■□■□■□■□■□■□ `);
- client.user.setActivity(`사용법 > help! `);
+ client.user.setActivity(`사용법은 help! `);
 });
 
 try{
@@ -61,7 +61,16 @@ client.on("message", async message => {
    else if(message.content.startsWith(`!서버정보`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) message.channel.send(`\`서버ID  ${message.guild.id}\` \n\`채널ID  ${message.channel.id}\``)
    else if(message.content.startsWith(`!에러로그`) && message.author.id == admin) sendLog(message,1,insertTime);
    else if(message.content.startsWith(`!봇로그`) && message.author.id == admin) sendLog(message,2,insertTime);
-   else if(message.content.startsWith(`!경기시작`) && message.author.id == admin && (message.author.id == "481052468277411850" || message.author.id == "444862001777475594") && message.guild.id == customServer){
+   else if(message.content.startsWith(`!추방`) && (message.author.id == admin || message.author.id == "481052468277411850" || message.author.id == "444862001777475594") && message.guild.id == customServer){
+    const list = client.guilds.cache.get(message.guild.id)
+    const members =  list.members.cache.map(member => {
+     member.id; 
+      if(member.roles.cache.has('804423345139482666')){
+        member.kick();
+      }
+   });
+   }
+   else if(message.content.startsWith(`!경기시작`) && (message.author.id == admin || message.author.id == "481052468277411850" || message.author.id == "444862001777475594") && message.guild.id == customServer){
     const list = client.guilds.cache.get(message.guild.id)
     const members =  list.members.cache.map(member => {
      member.id; 
@@ -73,14 +82,18 @@ client.on("message", async message => {
    });
    }
 
-   else if(message.content.startsWith(`!경기종료`)&& message.author.id == admin &&( message.author.id == "481052468277411850" || message.author.id == "444862001777475594") && message.guild.id == customServer){
+   else if(message.content.startsWith(`!경기종료`)&& (message.author.id == admin || message.author.id == "481052468277411850" || message.author.id == "444862001777475594") && message.guild.id == customServer){
     const list = client.guilds.cache.get(message.guild.id)
    const members =  list.members.cache.map(member => {
      member.id; 
+
       if(member.roles.cache.has('804423289665224774')){
-        member.roles.remove('804423289665224774'); member.roles.add('804423345139482666');console.log("complete")
-        if (member.roles.cache.has('804423289665224774') || member.roles.cache.has('804423345139482666')) member.voice.kick()
-        console.log("stop match")
+        member.roles.remove('804423289665224774').then(member.roles.add('804423345139482666')).then(console.log(`${member.user.username} complete`))
+          if(member.roles.cache.has('804423289665224774') || member.roles.cache.has('804423345139482666')) member.voice.kick() 
+          
+        
+        
+        console.log("ok")
       }
    });
    }
