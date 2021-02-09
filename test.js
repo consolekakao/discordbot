@@ -35,6 +35,8 @@ try{
 
 
 client.on("message", async message => { 
+  message.content = message.content.replace(/\'/g,"");
+  message.content = message.content.replace(/\\/g,"");
   if (message.author.bot) return;
  const now = new Date();
   const insertTime = `${now.getFullYear()}-${Number(now.getMonth())+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
