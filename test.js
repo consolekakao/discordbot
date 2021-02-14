@@ -180,7 +180,7 @@ client.on("message", async message => {
                             
                             }
                       }
-                      catch(e){client.guilds.cache.get("551980252453142549").channels.cache.get("802281466952024114").send(`다음과같은 오류가 있었어요.\`${String(e).substring}\``)}
+                      catch(e){client.guilds.cache.get("551980252453142549").channels.cache.get("802281466952024114").send(`다음과같은 오류가 있었어요.\`${String(e)}\``)}
                       }
                 );
     
@@ -189,7 +189,7 @@ client.on("message", async message => {
               
             } catch (error) {
               //console.error(error);
-              client.guilds.cache.get("551980252453142549").channels.cache.get("802281466952024114").send(`다음과같은 오류가 있었어요.\`${String(e).substring}\``)
+              client.guilds.cache.get("551980252453142549").channels.cache.get("802281466952024114").send(`다음과같은 오류가 있었어요.\`${String(e)}\``)
             }
           }
         );
