@@ -68,13 +68,11 @@ client.on("message", async message => {
    else if(message.content.startsWith(`!봇로그`) && message.author.id == admin) sendLog(message,2,insertTime);
    else if(message.content.startsWith(`!초대`) && (message.author.id == admin || message.author.id == "481052468277411850" || message.author.id == "444862001777475594") && message.guild.id == customServer){
     const invite = new Discord.MessageEmbed()
-    .setURL("https://discord.gg/p2UrjRE")
+    .setURL(message.content.substring(4))
     .setTitle(`커스텀 매치 초대장이 발급되었어요. \n참가하시려면 여기를 클릭해주세요.`)
     .setFooter('연합채널간 커스텀 매치를 위한 1일 유효 링크입니다.',"https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514")
     client.guilds.cache.get('551980252453142549').channels.cache.get('551980252453142551').send(invite)
     
-   // client.guilds.cache.get('551980252453142549').channels.cache.get('802281466952024114').send(``);
-   // client.guilds.cache.get('551980252453142549').channels.cache.get('802281466952024114').send(``);
    }
    else if(message.content.startsWith(`!추방`) && (message.author.id == admin || message.author.id == "481052468277411850" || message.author.id == "444862001777475594") && message.guild.id == customServer){
     const list = client.guilds.cache.get(message.guild.id)
