@@ -52,18 +52,18 @@ client.on("message", async message => {
   console.log(`channelid:${message.channel.id} request: ${message.content} time:${insertTime}`);
   console.log(' ');
 
-        if (message.content.startsWith(`노운아!`)) searchInfo(message);
-   else if (message.content.startsWith(`!채널추가`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) useKnown(message);
-   else if (message.content.startsWith(`!채널삭제`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) unuseKnown(message);
-   else if (message.content.startsWith(`저장!`)) saveNick(message,insertTime);
-   else if (message.content.startsWith(`내전적!`)) myInfo(message,insertTime);
-   else if(message.content == `도와줘!` || message.content == `help!`) command(message,insertTime);
-   else if(message.content.startsWith(`핵쟁이조회!`)) searchHack(message,insertTime);
-   else if(message.content.startsWith(`핵쟁이추가!`)) addHack(message,insertTime);
-   else if(message.content.startsWith("팀배정!")) splitTeam(message,insertTime);
+        if (message.content.includes(`노운아`)) searchInfo(message);
+   else if (message.content.includes(`채널추가`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) useKnown(message);
+   else if (message.content.includes(`채널삭제`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) unuseKnown(message);
+   else if (message.content.includes(`저장`)) saveNick(message,insertTime);
+   else if (message.content.includes(`내전적`)) myInfo(message,insertTime);
+   else if(message.content == `도와줘!` || message.content.includes == `help`) command(message,insertTime);
+   else if(message.content.includes(`핵쟁이조회`)) searchHack(message,insertTime);
+   else if(message.content.includes(`핵쟁이추가`)) addHack(message,insertTime);
+   else if(message.content.includes("팀배정")) splitTeam(message,insertTime);
    else if(message.content.startsWith(`!커넥트`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) connect(message,insertTime);
    else if(message.content.startsWith(`!디스커넥트`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) disconnect(message,insertTime);
-   else if(message.content.startsWith(`!서버정보`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) message.channel.send(`\`서버ID  ${message.guild.id}\` \n\`채널ID  ${message.channel.id}\``)
+   else if(message.content.includes(`서버정보`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) message.channel.send(`\`서버ID  ${message.guild.id}\` \n\`채널ID  ${message.channel.id}\``)
    else if(message.content.startsWith(`!에러로그`) && message.author.id == admin) sendLog(message,1,insertTime);
    else if(message.content.startsWith(`!봇로그`) && message.author.id == admin) sendLog(message,2,insertTime);
    else if(message.content.startsWith(`!초대`) && (message.author.id == admin || message.author.id == "481052468277411850" || message.author.id == "444862001777475594") && message.guild.id == customServer){
