@@ -58,7 +58,7 @@ let connection = mysql.createConnection({
         if(!findAccountCode?.data?.data[0]?.id){
          const resultReply = new Discord.MessageEmbed()
           .setColor("#ff0022")
-          .setTitle(`${id}의 전적 검색 결과가 없거나 일시적으로 요청량이 많아요.`)
+          .setTitle(`${id}의 전적 검색 결과가 없거나 일시적으로 요청량이 많아요.\n검색시 대/소문자를 구분해주세요!`)
           .setThumbnail('https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514')
           .setFooter('PUBG 서버로부터 실시간 제공 받은 자료입니다.',"https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514")
           message.reply('',resultReply)
