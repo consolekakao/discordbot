@@ -49,7 +49,7 @@ let connection = mysql.createConnection({
       try{
       resultSeason = await axios( //season
         {
-          url:`https://api.pubg.com/shards/kakao/players/${findAccountCode?.data?.data[0]?.id}/seasons/division.bro.official.pc-2018-10/ranked`,
+          url:`https://api.pubg.com/shards/kakao/players/${findAccountCode?.data?.data[0]?.id}/seasons/division.bro.official.pc-2018-11/ranked`,
           headers:{
             'Authorization': `Bearer ${apikey.bagapikey}`,
             'Accept': 'application/vnd.api+json'
