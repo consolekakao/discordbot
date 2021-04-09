@@ -19,7 +19,7 @@ function teamSplit(message,insertTime){
       message.channel.send("사용법이 이상해요. \n팀배정! <팀별인원수> 멤버A 멤버B 멤버C\nex) 팀배정! 3 팀원A 팀원B 팀원C 팀원D")
       connection.query(
         `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
-        ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+        ('${message.channel.guild.name}','${message.channel.name}','${message.author.id +' #' +message.author.discriminator}',
         '${insertTime}','${message.content}','-','SYNTAX ERR')`
       );
       return;
@@ -76,7 +76,7 @@ function teamSplit(message,insertTime){
   message.reply('',re)
   connection.query(
     `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
-    ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+    ('${message.channel.guild.name}','${message.channel.name}','${message.author.id +' #' +message.author.discriminator}',
     '${insertTime}','${message.content}','OK','')`
   );
   }

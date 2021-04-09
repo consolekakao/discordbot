@@ -41,7 +41,7 @@ let connection = mysql.createConnection({
      
   connection.query(
     `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
-    ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+    ('${message.channel.guild.name}','${message.channel.name}','${message.author.id +' #' +message.author.discriminator}',
     now(),'${message.content}','-','404_NOT FOUND_USER')`
   );
       return;
@@ -252,7 +252,7 @@ let connection = mysql.createConnection({
   message.reply('',resultReply)
   connection.query(
     `insert into BotLog (servername,channelname,usernick,time,usecommand,status) values 
-    ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+    ('${message.channel.guild.name}','${message.channel.name}','${message.author.id +' #' +message.author.discriminator}',
     now(),'${message.content}','OK')`
   );
   }

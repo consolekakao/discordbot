@@ -55,14 +55,14 @@ function command(message,insertTime){
                   message.reply('명령어 목록을 개인DM으로 보냈어요!')
                 await connection.query(
                   `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
-                  ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+                  ('${message.channel.guild.name}','${message.channel.name}','${message.author.id +' #' +message.author.discriminator}',
                   '${insertTime}','${message.content}','OK','')`
                 );
               }
                 else {
                   await  connection.query(
                     `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
-                    ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+                    ('${message.channel.guild.name}','${message.channel.name}','${message.author.id +' #' +message.author.discriminator}',
                     '${insertTime}','${message.content}','-','NO_HELP')`
                   );
                   return;

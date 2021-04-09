@@ -44,9 +44,9 @@ client.on("message", async message => {
  const now = new Date();
   const insertTime = `${now.getFullYear()}-${Number(now.getMonth())+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
   connection.query(
-    `insert into BotChat (server,channel,name,contents,time) values ('${message.channel.guild.name}','${message.channel.name}','${message.author.username}','${message.content}','${insertTime}')`
+    `insert into BotChat (server,channel,name,contents,time) values ('${message.channel.guild.name}','${message.channel.name}','${message.author.id}','${message.content}','${insertTime}')`
   );
-  console.log(`${insertTime}:${message.channel.guild.name}:${message.channel.name}:${message.author.username}:${message.content}`)
+  console.log(`${insertTime}:${message.channel.guild.name}:${message.channel.name}:${message.author.id}:${message.content}`)
 
   console.log(`user:${message.author.id} server:${message.channel.guild.name} channel:${message.channel.name}`);
   console.log(`channelid:${message.channel.id} request: ${message.content} time:${insertTime}`);
@@ -61,12 +61,12 @@ client.on("message", async message => {
    else if(message.content.includes(`핵쟁이조회`)) searchHack(message,insertTime);
    else if(message.content.includes(`핵쟁이추가`)) addHack(message,insertTime);
    else if(message.content.includes("팀배정")) splitTeam(message,insertTime);
-   else if(message.content.startsWith(`!커넥트`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) connect(message,insertTime);
+   /*else if(message.content.startsWith(`!커넥트`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) connect(message,insertTime);
    else if(message.content.startsWith(`!디스커넥트`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) disconnect(message,insertTime);
-   else if(message.content.includes(`서버정보`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) message.channel.send(`\`서버ID  ${message.guild.id}\` \n\`채널ID  ${message.channel.id}\``)
+   else if(message.content.includes(`서버정보`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) message.channel.send(`\`서버ID  ${message.guild.id}\` \n\`채널ID  ${message.channel.id}\``)*/
    else if(message.content.startsWith(`!에러로그`) && message.author.id == admin) sendLog(message,1,insertTime);
    else if(message.content.startsWith(`!봇로그`) && message.author.id == admin) sendLog(message,2,insertTime);
-   else if(message.content.startsWith(`!초대`) && (message.author.id == admin || message.author.id == "481052468277411850" || message.author.id == "444862001777475594") && message.guild.id == customServer){
+   /*else if(message.content.startsWith(`!초대`) && (message.author.id == admin || message.author.id == "481052468277411850" || message.author.id == "444862001777475594") && message.guild.id == customServer){
     const invite = new Discord.MessageEmbed()
     .setURL(message.content.substring(4))
     .setTitle(`커스텀 매치 초대장이 발급되었어요. \n참가하시려면 여기를 클릭해주세요.`)
@@ -106,7 +106,7 @@ client.on("message", async message => {
           console.log("All member Kick")
       }
    });
-   }
+   }*/
 
    
 
@@ -129,23 +129,23 @@ client.on("message", async message => {
           })
       }
     
-      function sendMessage(nick){
+   /*   function sendMessage(nick){
         if(message.content.startsWith("!help") || message.content.startsWith("!커넥트") || message.content.startsWith("!디스커넥트")) 
         {
-            client.guilds.cache.get('551980252453142549').channels.cache.get('802281466952024114').send(`[명령어입력]\n일시: ${now.getMonth()+1}월 ${now.getDate()}일${now.getHours()}시 ${now.getMinutes()}분 \n의심서버: ${message.guild.name} \n의심 유저:${message.author.username} \n메시지내용:${message.content}\n처리결과:미전송`)
+            client.guilds.cache.get('551980252453142549').channels.cache.get('802281466952024114').send(`[명령어입력]\n일시: ${now.getMonth()+1}월 ${now.getDate()}일${now.getHours()}시 ${now.getMinutes()}분 \n의심서버: ${message.guild.name} \n의심 유저:${message.author.id} \n메시지내용:${message.content}\n처리결과:미전송`)
             return;
         }
       if(message.content.includes("//") || message.content.includes("http") || message.content.includes("www.") || message.content.includes(".com")) 
       {
           message.channel.send("`주소 공유가 감지되었어요. \n원만한 클랜 관계를 위해 해당 메시지는 전송하지 않았어요.`")
-          client.guilds.cache.get('551980252453142549').channels.cache.get('802281466952024114').send(`[주소 공유 의심]\n일시: ${now.getMonth()+1}월 ${now.getDate()}일${now.getHours()}시 ${now.getMinutes()}분 \n의심서버: ${message.guild.name} \n의심 유저:${message.author.username} \n메시지내용:${message.content}\n처리결과:미전송`)
+          client.guilds.cache.get('551980252453142549').channels.cache.get('802281466952024114').send(`[주소 공유 의심]\n일시: ${now.getMonth()+1}월 ${now.getDate()}일${now.getHours()}시 ${now.getMinutes()}분 \n의심서버: ${message.guild.name} \n의심 유저:${message.author.id} \n메시지내용:${message.content}\n처리결과:미전송`)
           return;
       }
     
       else if(message.content.includes(message.author.discriminator)) 
       {
           message.channel.send("`해시태그가 감지되었어요. \n원만한 클랜 관계를 위해 해당 메시지는 전송하지 않았어요.`")
-          client.guilds.cache.get('551980252453142549').channels.cache.get('802281466952024114').send(`[디스코드 계정 공유 의심]\n일시: ${now.getMonth()+1}월 ${now.getDate()}일${now.getHours()}시 ${now.getMinutes()}분 \n의심서버: ${message.guild.name} \n의심 유저:${message.author.username} \n메시지내용:${message.content}\n처리결과:미전송`)
+          client.guilds.cache.get('551980252453142549').channels.cache.get('802281466952024114').send(`[디스코드 계정 공유 의심]\n일시: ${now.getMonth()+1}월 ${now.getDate()}일${now.getHours()}시 ${now.getMinutes()}분 \n의심서버: ${message.guild.name} \n의심 유저:${message.author.id} \n메시지내용:${message.content}\n처리결과:미전송`)
           return;
       }
     
@@ -195,7 +195,7 @@ client.on("message", async message => {
     
     
       }
-      }
+      }*/
   
    }
 

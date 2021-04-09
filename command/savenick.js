@@ -28,7 +28,7 @@ function saveNick(message,insertTime){
     
                 connection.query(
                   `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
-                  ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+                  ('${message.channel.guild.name}','${message.channel.name}','${message.author.id +' #' +message.author.discriminator}',
                   '${insertTime}','${message.content}','OK','')`
                 );
                 return;
@@ -41,7 +41,7 @@ function saveNick(message,insertTime){
                 
                 connection.query(
                   `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
-                  ('${message.channel.guild.name}','${message.channel.name}','${message.author.username +' #' +message.author.discriminator}',
+                  ('${message.channel.guild.name}','${message.channel.name}','${message.author.id +' #' +message.author.discriminator}',
                   '${insertTime}','${message.content}','OK','')`
                 );
                 return;
