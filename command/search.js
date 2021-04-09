@@ -62,7 +62,7 @@ let connection = mysql.createConnection({
       }
      season = await axios( //일반게임 현재시즌 통계
       {
-        url:`https://api.pubg.com/shards/kakao/players/${findAccountCode?.data?.data[0]?.id}/seasons/division.bro.official.pc-2018-10`,
+        url:`https://api.pubg.com/shards/kakao/players/${findAccountCode?.data?.data[0]?.id}/seasons/division.bro.official.pc-2018-11`,
         headers:{
           'Authorization': `Bearer ${apikey.bagapikey}`,
           'Accept': 'application/vnd.api+json'
