@@ -26,7 +26,7 @@ function command(message,insertTime){
             { name: `\`!채널삭제\``, value: `이제 이 채팅방에서 노운이를 사용할 수 없어요.` },
             {name:`\u200b`,value:`\u200b`},
            {name:`\u200b`,value:`\u200b`},
-           { name: `# 개발자에게 문의하기`, value: `개발자에게 문의를 남길 수 있어요.\nMail: console@kakao.com \nDiscord 노운이친구#9736 \n답변을 원할 경우 메일로 문의주세요.` }
+           { name: `# 개발자에게 문의하기`, value: `개발자에게 문의를 남길 수 있어요.\nMail: console@kakao.com \nDiscord 노운이개발자#9736 \n답변을 원할 경우 메일로 문의주세요.` }
 
         )
         .setThumbnail('https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514')
