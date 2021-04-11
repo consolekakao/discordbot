@@ -19,7 +19,7 @@ function command(message,insertTime){
            { name: `\`!저장 <Player>\``, value: `해당 ID를 노운이에게 저장해요.`},
            { name: `\`!내전적\``, value: `저장된 ID의 검색 결과를 불러와요.` },
            { name: `\`!help\``, value: `노운이 명령어를 확인할 수 있어요.` },
-           { name: `\`팀배정! <한 팀당 인원수> <멤버A> <멤버B> <멤버C> ...\``, value: `랜덤으로 팀을 꾸려줘요.\nex) 팀배정! 2 멤버A 멤버B 멤버C 멤버D 멤버E 멤버F` },
+           { name: `\`!팀배정 <한 팀당 인원수> <멤버A> <멤버B> <멤버C> ...\``, value: `랜덤으로 팀을 꾸려줘요.\nex) 팀배정! 2 멤버A 멤버B 멤버C 멤버D 멤버E 멤버F` },
            {name:`\u200b`,value:`\u200b`},
            {name: `# 관리자 명령어`,value:`\u200b`},
             { name: `\`!채널추가\``, value: `이제 이 채팅방에서 노운의 모든 기능을 사용할 수 있어요.` },
