@@ -35,14 +35,12 @@ try{
    message.channel.name =  await message.channel.name.replace(regax,"").replace(regax2,"");
 
 
-
-
   if (message.author.bot) return;
  const now = new Date();
   const insertTime = `${now.getFullYear()}-${Number(now.getMonth())+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
  try {
-     connection.query(
-         `insert into BotChat (server,channel,name,contents,time) values ("${message.channel.guild.name}","${message.channel.name.replace(/[^ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/g,"")}","${message.author.username.replace(/[^ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/g,"")}","${message.content.replace(/[^ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/g,"")}","${insertTime}");`
+    connection.query(
+         `insert into BotChat (serverid,server,channel,name,contents,time) values ("${message.channel.id}","${message.channel.guild.name}","${message.channel.name.replace(/[^ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/g,"")}","${message.author.username.replace(/[^ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/g,"")}","${message.content.replace(/[^ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/g,"")}","${insertTime}");`
      );
  }
  catch (e){
