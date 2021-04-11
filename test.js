@@ -60,7 +60,7 @@ try{
                 async function (err, rows) {
                     try {
                         if (err) throw err;
-                        if(rows[0] ) message.reply("명령어가 정확하지 않아요. \r\n 혹시 `!전적 <player>` 또는 `!내전적 <player>` 명령어를 찾으시나요?");
+                        if(rows[0] ) message.reply("명령어가 정확하지 않아요. \r\n 혹시 `!전적 <player>` 또는 `!내전적` 명령어를 찾으시나요?\r\n명령어를 모르겠다면 `!help`를 입력하세요.");
                         else return;
 
                     } catch (error) {
