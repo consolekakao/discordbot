@@ -21,7 +21,7 @@ let connection = mysql.createConnection({
      async function (err, rows) {
         try {
           if (err) throw err;
-          if(rows[0] ) await search(args[1],message);
+          if(rows[0] ) await search(args[0],message);
           else return;
           
         } catch (error) {
