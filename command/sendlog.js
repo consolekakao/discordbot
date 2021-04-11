@@ -1,3 +1,8 @@
+/**
+ *
+ * !봇로그 !에러로그
+ *
+ */
 const Discord = require("discord.js");
 const fs = require('fs');
 async function sendLog(message,number,insertTime){

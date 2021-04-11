@@ -14,7 +14,10 @@ function saveNick(message,insertTime){
         
         connection.connect()
         const nickname = message.content.slice(4);
-        
+        if(nickname == "" || nickname.length < 4){
+            message.channel.send(`아이디가 이상하군요. 다시 입력해주세요.`);
+            return;
+        }
         connection.query(
           `SELECT * FROM BotSaveNick where userid = "${message.author.id}"`,
          async function (err, rows) {
@@ -25,25 +28,14 @@ function saveNick(message,insertTime){
                   `update BotSaveNick set savename = "${nickname}" where userid = "${message.author.id}"`
                 );
                 message.channel.send(`기존에 있던 아이디를 ${nickname} 으로 변경했어요!`)
-    
-                connection.query(
-                  `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
-                  ('${message.channel.guild.name}','${message.channel.name}','${message.author.id +' #' +message.author.discriminator}',
-                  '${insertTime}','${message.content}','OK','')`
-                );
                 return;
               }
               else { //아직 등록한 아이디가 없는경우
                 connection.query(
                   `insert into BotSaveNick (userid,savename) values ("${message.author.id}","${nickname}")`
                 );
-                message.channel.send(`아이디를 저장했어요. 이제 내전적! 이라고 외쳐주세요!.`)
-                
-                connection.query(
-                  `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
-                  ('${message.channel.guild.name}','${message.channel.name}','${message.author.id +' #' +message.author.discriminator}',
-                  '${insertTime}','${message.content}','OK','')`
-                );
+                message.channel.send(`아이디를 저장했어요. 이제 !내전적 이라고 외쳐주세요!.`)
+
                 return;
               }
             } catch (error) {

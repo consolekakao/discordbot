@@ -1,4 +1,8 @@
-
+/**
+ *
+ * !채널삭제 명령어
+ *
+ */
 function unuseKnown(message){
     const Discord = require("discord.js");
     const  mysql = require("mysql");

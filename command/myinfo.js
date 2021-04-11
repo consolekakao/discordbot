@@ -1,4 +1,4 @@
-function useKnown(message,insertTime){
+function myinfo(message,insertTime){
     const Discord = require("discord.js");
     const  mysql = require("mysql");
     const client = new Discord.Client();
@@ -44,9 +44,6 @@ function useKnown(message,insertTime){
               }
             }
           );
-
-
         }    
 
-
-        module.exports = useKnown
+        module.exports = myinfo

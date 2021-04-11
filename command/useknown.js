@@ -1,4 +1,8 @@
-
+/**
+ *
+ * !채널추가 명령어
+ *
+ */
 function useKnown(message){
     const Discord = require("discord.js");
     const  mysql = require("mysql");
