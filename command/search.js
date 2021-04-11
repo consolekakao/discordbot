@@ -27,10 +27,7 @@ let connection = mysql.createConnection({
     )
     }
     
-    catch(e){
-        //console.log(e)
-       // client.guilds.cache.get("551980252453142549").channels.cache.get("802281466952024114").send(`다음과같은 오류가 있었어요.\`${String(e).substring}\``)
-    }
+    catch(e){}
     if(!findAccountCode?.data?.data[0]?.id){
      const resultReply = new Discord.MessageEmbed()
       .setColor("#ff0022")
@@ -38,12 +35,6 @@ let connection = mysql.createConnection({
       .setThumbnail('https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514')
       .setFooter('PUBG 서버로부터 실시간 제공 받은 자료입니다.',"https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514")
       message.reply('',resultReply)
-     
-  connection.query(
-    `insert into BotLog (servername,channelname,usernick,time,usecommand,status,errormessage) values 
-    ('${message.channel.guild.name}','${message.channel.name}','${message.author.id +' #' +message.author.discriminator}',
-    now(),'${message.content}','-','404_NOT FOUND_USER')`
-  );
       return;
     }
       try{
@@ -250,11 +241,6 @@ let connection = mysql.createConnection({
   .setThumbnail("https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514")
   .setFooter('위 자료는 PUBG로부터 실시간 전송 받은 자료입니다.',"https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514")
   message.reply('',resultReply)
-  connection.query(
-    `insert into BotLog (servername,channelname,usernick,time,usecommand,status) values 
-    ('${message.channel.guild.name}','${message.channel.name}','${message.author.id +' #' +message.author.discriminator}',
-    now(),'${message.content}','OK')`
-  );
   }
 
   module.exports = search;
