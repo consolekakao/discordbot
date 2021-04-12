@@ -17,7 +17,7 @@ let connection = mysql.createConnection({
     try{
     findAccountCode = await axios( //account id
       {
-        url:`https://api.pubg.com/shards/kakao/players?filter[playerNames]=${id}`,
+        url:`https://api.pubg.com/shards/kakao/players?filter[playerNames]=mojjijjang,FLUKE_JEONG,jounsuck,eretey`,
         headers:{
           'Authorization': `Bearer ${apikey.bagapikey}`,
           'Accept': 'application/vnd.api+json'
@@ -28,6 +28,7 @@ let connection = mysql.createConnection({
     }
     
     catch(e){}
+    console.log(findAccountCode.data.data);
     if(!findAccountCode?.data?.data[0]?.id){
      const resultReply = new Discord.MessageEmbed()
       .setColor("#ff0022")
@@ -37,19 +38,26 @@ let connection = mysql.createConnection({
       message.reply('',resultReply)
       return;
     }
+    console.log("437896793427869832769843726897432986748236");
+    console.log(`https://api.pubg.com/shards/kakao/seasons/division.bro.official.pc-2018-11/ranked/players?filter[playerNames]=${findAccountCode?.data?.data[0]?.id},${findAccountCode?.data?.data[1]?.id},${findAccountCode?.data?.data[2]?.id},${findAccountCode?.data?.data[3]?.id}`)
+    console.log("09483697396874398578378953247973492857983427592");
       try{
-      resultSeason = await axios( //season
-        {
-          url:`https://api.pubg.com/shards/kakao/players/${findAccountCode?.data?.data[0]?.id}/seasons/division.bro.official.pc-2018-11/ranked`,
-          headers:{
-            'Authorization': `Bearer ${apikey.bagapikey}`,
-            'Accept': 'application/vnd.api+json'
-          },
-          timeout:2000 
-        }
-      )
+            resultSeason = await axios( //season
+                {
+                    url: `https://api.pubg.com/shards/kakao/seasons/division.bro.official.pc-2018-11/ranked/players/${findAccountCode?.data?.data[0]?.id},${findAccountCode?.data?.data[1]?.id},${findAccountCode?.data?.data[2]?.id},${findAccountCode?.data?.data[3]?.id}`,
+                    headers: {
+                        'Authorization': `Bearer ${apikey.bagapikey}`,
+                        'Accept': 'application/vnd.api+json'
+                    },
+                    timeout: 2000
+                }
+            )
+          console.log("--------------------------------------")
+        console.log(resultSeason);
+          console.log("--------------------------------------")
     }
       catch(e){
+          console.log(e);
       }
      season = await axios( //일반게임 현재시즌 통계
       {
