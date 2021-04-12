@@ -17,7 +17,7 @@ let connection = mysql.createConnection({
     try{
     findAccountCode = await axios( //account id
       {
-        url:`https://api.pubg.com/shards/kakao/players?filter[playerNames]=mojjijjang,FLUKE_JEONG,jounsuck,eretey`,
+        url:`https://api.pubg.com/shards/kakao/players?filter[playerNames]=${id}`,
         headers:{
           'Authorization': `Bearer ${apikey.bagapikey}`,
           'Accept': 'application/vnd.api+json'
@@ -42,19 +42,16 @@ let connection = mysql.createConnection({
     console.log(`https://api.pubg.com/shards/kakao/seasons/division.bro.official.pc-2018-11/ranked/players?filter[playerNames]=${findAccountCode?.data?.data[0]?.id},${findAccountCode?.data?.data[1]?.id},${findAccountCode?.data?.data[2]?.id},${findAccountCode?.data?.data[3]?.id}`)
     console.log("09483697396874398578378953247973492857983427592");
       try{
-            resultSeason = await axios( //season
-                {
-                    url: `https://api.pubg.com/shards/kakao/seasons/division.bro.official.pc-2018-11/ranked/players/${findAccountCode?.data?.data[0]?.id},${findAccountCode?.data?.data[1]?.id},${findAccountCode?.data?.data[2]?.id},${findAccountCode?.data?.data[3]?.id}`,
-                    headers: {
-                        'Authorization': `Bearer ${apikey.bagapikey}`,
-                        'Accept': 'application/vnd.api+json'
-                    },
-                    timeout: 2000
-                }
-            )
-          console.log("--------------------------------------")
-        console.log(resultSeason);
-          console.log("--------------------------------------")
+      resultSeason = await axios( //season
+        {
+          url:`https://api.pubg.com/shards/kakao/players/${findAccountCode?.data?.data[0]?.id}/seasons/division.bro.official.pc-2018-11/ranked`,
+          headers:{
+            'Authorization': `Bearer ${apikey.bagapikey}`,
+            'Accept': 'application/vnd.api+json'
+          },
+          timeout:2000
+        }
+      )
     }
       catch(e){
           console.log(e);
