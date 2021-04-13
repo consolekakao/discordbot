@@ -28,7 +28,6 @@ let connection = mysql.createConnection({
     }
     
     catch(e){}
-    console.log(findAccountCode.data.data);
     if(!findAccountCode?.data?.data[0]?.id){
      const resultReply = new Discord.MessageEmbed()
       .setColor("#ff0022")
