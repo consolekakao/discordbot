@@ -222,7 +222,7 @@ let connection = mysql.createConnection({
           }
   
   const resultReply = new Discord.MessageEmbed()
-  .setColor("#0ab1ff")
+  .setColor("#00943e")
   .setTitle(`${id} 전적 검색 결과에용`)
   .addFields({name:`\`솔로\``,value:
   `

@@ -16,7 +16,7 @@ function teamSplit(message,insertTime){
     const args = String(message.content).split(/ +/);
     if(isNaN(Number(args[1])) || Number(args[1]) == 0 || Number(args[1].length != 1))
     {
-      message.channel.send("사용법이 이상해요. \n팀배정! <팀별인원수> 멤버A 멤버B 멤버C\nex) 팀배정! 3 팀원A 팀원B 팀원C 팀원D")
+      message.channel.send("사용법이 이상해요. \n!팀배정 <팀별인원수> 멤버A 멤버B 멤버C\nex) !팀배정 3 팀원A 팀원B 팀원C 팀원D")
       return;
     }
     let data = [];
@@ -54,7 +54,7 @@ function teamSplit(message,insertTime){
   
     let arr = "";
   let re = new Discord.MessageEmbed()
-  .setColor("#ff0022")
+  .setColor("#00943e")
   .setTitle(`총 ${result.length}팀이 나왔어요.`)
   for(let i = 0; i<result.length;i++)
   {
