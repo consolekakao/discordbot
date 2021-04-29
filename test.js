@@ -9,6 +9,7 @@ const myInfo = require("./command/myinfo.js");
 const command = require("./command/command.js");
 const splitTeam = require("./command/splitteam.js");
 const sendLog = require("./command/sendlog.js");
+const team = require("./command/team");
 const client = new Discord.Client();
 let connection = mysql.createConnection({
   host: config.host,
@@ -52,6 +53,7 @@ try{
   console.log(' ');
 
         if (message.content.startsWith(`!전적`)) searchInfo(message);
+        else if(message.content.startsWith(`!!`)) team(message);
    else if (message.content.startsWith(`!채널추가`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) useKnown(message);
    else if (message.content.startsWith(`!채널삭제`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) unuseKnown(message);
    else if (message.content.startsWith(`!저장`)) saveNick(message,insertTime);

@@ -17,7 +17,7 @@ let connection = mysql.createConnection({
     try{
     findAccountCode = await axios( //account id
       {
-        url:`https://api.pubg.com/shards/kakao/players?filter[playerNames]=${id}`,
+        url:`https://api.pubg.com/shards/kakao/players?filter[playerNames]=mojjijjang,jounsuck,FLUKE_JEONG,eretey`,
         headers:{
           'Authorization': `Bearer ${apikey.bagapikey}`,
           'Accept': 'application/vnd.api+json'
@@ -28,6 +28,7 @@ let connection = mysql.createConnection({
     }
     
     catch(e){}
+    console.log(findAccountCode);
     if(!findAccountCode?.data?.data[0]?.id){
      const resultReply = new Discord.MessageEmbed()
       .setColor("#ff0022")
@@ -37,7 +38,7 @@ let connection = mysql.createConnection({
       message.reply('',resultReply)
       return;
     }
-    
+
       try{
       resultSeason = await axios( //season
         {
