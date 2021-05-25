@@ -14,7 +14,7 @@ let connection = mysql.createConnection({
     database: config.database,
   });
     const args = String(message.content).slice(4).split(/ +/);
-    
+
     connection.connect();
     connection.query(
       `SELECT * FROM BotChannel where channelid = "${message.channel.id}"`,
@@ -23,22 +23,16 @@ let connection = mysql.createConnection({
           if (err) throw err;
           if(rows[0] ) await search(args[0],message);
           else return;
-          
+
         } catch (error) {
           console.error(error);
         }
       }
     );
 
-
-
-
-
-
-
    async function search(id,message,insertTime){
         let findAccountCode,resultSeason,season;
-         
+
         try{
         findAccountCode = await axios( //account id
           {
@@ -47,11 +41,11 @@ let connection = mysql.createConnection({
               'Authorization': `Bearer ${apikey.bagapikey}`,
               'Accept': 'application/vnd.api+json'
             },
-            timeout:2000  
+            timeout:2000
           }
         )
         }
-        
+
         catch(e){
             console.log(e)
         }
@@ -72,7 +66,7 @@ let connection = mysql.createConnection({
                 'Authorization': `Bearer ${apikey.bagapikey}`,
                 'Accept': 'application/vnd.api+json'
               },
-              timeout:2000 
+              timeout:2000
             }
           )
         }
@@ -85,14 +79,14 @@ let connection = mysql.createConnection({
               'Authorization': `Bearer ${apikey.bagapikey}`,
               'Accept': 'application/vnd.api+json'
             },
-            timeout:2000  
+            timeout:2000
           }
         )
       let result = {}
       let rankSolo = {
         currentTier:{             //현재 티어
           tier : "NO DATA",
-          subTier : ""}, 
+          subTier : ""},
           currentRankPoint: "",  //현재 랭크점수
           bestTier: { tier: '', subTier: '' },   //최대 티어
           bestRankPoint: '',  //최대 랭크 점수
@@ -104,11 +98,11 @@ let connection = mysql.createConnection({
           assist:'', //어시스트
           damageDealt: '' //누적 데미지
         }
-      
+
         let rankSquad = {
           currentTier:{             //현재 티어
             tier : "NO DATA",
-            subTier : ""}, 
+            subTier : ""},
             currentRankPoint: "",  //현재 랭크점수
             bestTier: { tier: '', subTier: '' },   //최대 티어
             bestRankPoint: '',  //최대 랭크 점수
@@ -120,7 +114,7 @@ let connection = mysql.createConnection({
             assist:'', //어시스트
             damageDealt: '' //누적 데미지
           }
-      
+
           let squad,duo,solo = {
             kills:'',
             losses:'',
@@ -135,8 +129,8 @@ let connection = mysql.createConnection({
       if(season?.data?.data?.attributes?.gameModeStats?.squad) {squad = season.data.data.attributes.gameModeStats.squad;}
       if(season?.data?.data?.attributes?.gameModeStats?.duo) {duo = season.data.data.attributes.gameModeStats.duo;}
       if(season?.data?.data?.attributes?.gameModeStats?.solo) {solo = season.data.data.attributes.gameModeStats.solo;}
-      
-      
+
+
       if(rankSolo.currentTier.tier != "NO DATA"){
         let avgDill = Number(rankSolo.damageDealt)/Number(rankSolo.roundsPlayed);
             avgDill = String(avgDill).slice(0,5);
@@ -169,7 +163,7 @@ let connection = mysql.createConnection({
             rankSquad.top10Ratio = String(rankSquad.top10Ratio).slice(0,4) + '%';
             rankSquad.winRatio = rankSquad.winRatio*100;
             rankSquad.winRatio = String(rankSquad.winRatio).slice(0,4) + '%';
-            
+
         result.rankSquad = `
         :trophy:${rankSquad.currentTier.tier} ${rankSquad.currentTier.subTier} : ${rankSquad.currentRankPoint}RP
         최고티어: ${rankSquad.bestTier.tier}${rankSquad.bestTier.subTier} : ${rankSquad.bestRankPoint}RP
@@ -186,11 +180,11 @@ let connection = mysql.createConnection({
         }
         if(squad.kills !==''){
           let kda = (Number(squad.kills)+Number(squad.assists))/Number(squad.losses);
-          kda = (String(kda).slice(0,3)) 
+          kda = (String(kda).slice(0,3))
           let winGamePercent = Number(squad.wins)/Number(squad.roundsPlayed)*100;
           winGamePercent = String(winGamePercent).slice(0,3) + '%'
           let avgDill = Number(squad.damageDealt)/Number(squad.roundsPlayed);
-          avgDill = String(avgDill).slice(0,5) 
+          avgDill = String(avgDill).slice(0,5)
           if(kda == "NaN") kda = "-";
           if(winGamePercent == "NaN%") winGamePercent = "-";
           if(avgDill == "NaN") avgDill = "-"
@@ -205,31 +199,31 @@ let connection = mysql.createConnection({
           }
         if(duo.kills !==''){
             let kda = (Number(duo.kills)+Number(duo.assists))/Number(duo.losses);
-            kda = String(kda).slice(0,3) 
+            kda = String(kda).slice(0,3)
             let winGamePercent = Number(duo.wins)/Number(duo.roundsPlayed)*100;
             winGamePercent = String(winGamePercent).slice(0,3) + '%'
             let avgDill = Number(duo.damageDealt)/Number(duo.roundsPlayed);
             avgDill = String(avgDill).slice(0,5)
             if(kda == "NaN") kda = "-";
             if(winGamePercent == "NaN%") winGamePercent = "-";
-            if(avgDill == "NaN") avgDill = "-" 
+            if(avgDill == "NaN") avgDill = "-"
             result.duo = `
             KDA: ${kda}
             평딜: ${avgDill}
             승률: ${winGamePercent}
-            `                       
+            `
             }
             else{
               result.duo = `NO DATA`
             }
-      
+
         if(solo.kills !==''){
               let kda = (Number(solo.kills))/Number(solo.losses);
               kda = String(kda).slice(0,3)
               let winGamePercent = Number(solo.wins)/Number(solo.roundsPlayed)*100;
               winGamePercent = String(winGamePercent).slice(0,3) + '%'
               let avgDill = Number(solo.damageDealt)/Number(solo.roundsPlayed);
-              avgDill = String(avgDill).slice(0,5)  
+              avgDill = String(avgDill).slice(0,5)
               if(kda == "NaN") kda = "-";
               if(winGamePercent == "NaN%") winGamePercent = "-";
               if(avgDill == "NaN") avgDill = "-"
@@ -242,7 +236,7 @@ let connection = mysql.createConnection({
               else{
                 result.solo = `NO DATA`
               }
-      
+
       const resultReply = new Discord.MessageEmbed()
       .setColor("#00943e")
       .setTitle(`${id} 전적 검색 결과에용`)
@@ -264,7 +258,7 @@ let connection = mysql.createConnection({
       ${result.rankSolo}`,inline:true},
       {name:`\`랭크 스쿼드\``,value:`
       ${result.rankSquad}`,inline:true})
-      
+
       .setThumbnail("https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514")
       .setFooter('위 자료는 PUBG로부터 실시간 전송 받은 자료입니다.',"https://media.discordapp.net/attachments/793834376017215558/793844780626608148/known2.png?width=541&height=514")
       message.reply('',resultReply)

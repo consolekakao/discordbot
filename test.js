@@ -9,15 +9,16 @@ const myInfo = require("./command/myinfo.js");
 const command = require("./command/command.js");
 const splitTeam = require("./command/splitteam.js");
 const sendLog = require("./command/sendlog.js");
+const squard = require("./command/squard");
 const team = require("./command/team");
 const client = new Discord.Client();
-let connection = mysql.createConnection({
+/*let connection = mysql.createConnection({
   host: config.host,
   port: config.port,
   user: config.user,
   password: config.password,
   database: config.database,
-});
+});*/
 const admin = "526415286358769664";
 
 client.once("ready", () => {
@@ -40,9 +41,9 @@ try{
  const now = new Date();
   const insertTime = `${now.getFullYear()}-${Number(now.getMonth())+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
  try {
-    connection.query(
+    /*connection.query(
          `insert into BotChat (serverid,server,channel,name,contents,time) values ("${message.channel.id}","${message.channel.guild.name}","${message.channel.name.replace(/[^ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/g,"")}","${message.author.username.replace(/[^ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/g,"")}","${message.content.replace(/[^ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/g,"")}","${insertTime}");`
-     );
+     );*/
  }
  catch (e){
      client.guilds.cache.get("551980252453142549").channels.cache.get("802281466952024114").send(`다음과같은 오류가 있었어요.\`${String(e).substring}\``);
@@ -53,7 +54,7 @@ try{
   console.log(' ');
 
         if (message.content.startsWith(`!전적`)) searchInfo(message);
-        else if(message.content.startsWith(`!!`)) team(message);
+        else if(message.content.startsWith(`!!`)) squard(message);
    else if (message.content.startsWith(`!채널추가`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) useKnown(message);
    else if (message.content.startsWith(`!채널삭제`) && (message.channel.guild.ownerID == message.author.id || message.author.id == admin)) unuseKnown(message);
    else if (message.content.startsWith(`!저장`)) saveNick(message,insertTime);
